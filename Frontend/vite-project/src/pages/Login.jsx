@@ -83,14 +83,7 @@ export default function Login() {
           </Button>
         </form>
         <div className="flex justify-center space-x-4 text-sm text-gray-500">
-          <span>অথবা</span>
-          <Button
-            type="button"
-            onClick={() => navigate('/guest')}
-            className="text-green-600 hover:text-green-700"
-          >
-            গেস্ট হিসেবে সাইন ইন করুন
-          </Button>
+          
         </div>
       </div>
     </div>

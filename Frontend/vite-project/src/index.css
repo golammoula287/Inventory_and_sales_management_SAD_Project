@@ -7,3 +7,44 @@ html, body, #root { height: 100%; }
 body { @apply text-gray-900; }
 a { @apply text-blue-600 hover:underline; }
 
+/* In your global CSS or Tailwind configuration */
+.sidebar-link {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar-link:hover {
+  transform: scale(1.05);
+}
+
+
+/* Remove underline and focus outline for all sidebar links */
+.sidebar a {
+  text-decoration: none;
+  outline: none;
+}
+
+.sidebar a:focus,
+.sidebar a:active,
+.sidebar a:hover {
+  outline: none;
+  box-shadow: none;
+}
+
+
+/* For the container holding the button and form */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Add spacing between the form and the button */
+}
+
+/* Adjust the button */
+button {
+  margin-top: 20px; /* Ensures the button has space above it */
+}
+
+/* Optional: Customize button size and responsiveness */
+button {
+  width: auto;
+  max-width: 300px;
+}

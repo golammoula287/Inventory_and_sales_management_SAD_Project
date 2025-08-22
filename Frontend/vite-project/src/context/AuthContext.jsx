@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const t = getToken()
         if (t) {
-          const res = await api.get('/api/auth/me')
+          const res = await api.get('/auth/me')
           setUser(res.data?.user || null)
           setToken(t)
         } else {
