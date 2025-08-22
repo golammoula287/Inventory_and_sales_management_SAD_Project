@@ -2,10 +2,29 @@ const Purchase = require('../models/purchase');
 
 const addPurchase = async (req, res) => {
   try {
-    const { productId, supplierId, quantity, unitPrice, totalAmount, purchaseDate, storageLocation, invoiceUrl } = req.body;
-    const newPurchase = new Purchase({ productId, supplierId, quantity, unitPrice, totalAmount, purchaseDate, storageLocation, invoiceUrl });
+    const { productId, supplierId, quantity, unitPrice, totalAmount, purchaseDate, storageLocation, invoiceUrl, note } = req.body;
+
+    const newPurchase = new Purchase({
+      productId,
+      supplierId,
+      quantity,
+      unitPrice,
+      totalAmount,
+      purchaseDate,
+      storageLocation,
+      invoiceUrl,
+      note
+    });
+
     await newPurchase.save();
-    res.status(201).json({ message: 'Purchase added successfully', newPurchase });
+
+    // Populate supplier and product details in response
+    const populatedPurchase = await newPurchase.populate([
+      { path: 'supplierId', select: 'name' },
+      { path: 'productId', select: 'name' }
+    ]);
+
+    res.status(201).json({ message: 'Purchase added successfully', purchase: populatedPurchase });
   } catch (error) {
     res.status(500).json({ message: 'Error adding purchase', error });
   }
@@ -13,7 +32,9 @@ const addPurchase = async (req, res) => {
 
 const getPurchases = async (req, res) => {
   try {
-    const purchases = await Purchase.find();
+    const purchases = await Purchase.find()
+      .populate('supplierId', 'name')
+      .populate('productId', 'name');
     res.status(200).json(purchases);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching purchases', error });
@@ -22,7 +43,9 @@ const getPurchases = async (req, res) => {
 
 const getPurchase = async (req, res) => {
   try {
-    const purchase = await Purchase.findById(req.params.purchase_id);
+    const purchase = await Purchase.findById(req.params.purchase_id)
+      .populate('supplierId', 'name contact')
+      .populate('productId', 'name category');
     if (!purchase) {
       return res.status(404).json({ message: 'Purchase not found' });
     }
@@ -34,7 +57,9 @@ const getPurchase = async (req, res) => {
 
 const updatePurchase = async (req, res) => {
   try {
-    const purchase = await Purchase.findByIdAndUpdate(req.params.purchase_id, req.body, { new: true });
+    const purchase = await Purchase.findByIdAndUpdate(req.params.purchase_id, req.body, { new: true })
+      .populate('supplierId', 'name')
+      .populate('productId', 'name');
     if (!purchase) {
       return res.status(404).json({ message: 'Purchase not found' });
     }

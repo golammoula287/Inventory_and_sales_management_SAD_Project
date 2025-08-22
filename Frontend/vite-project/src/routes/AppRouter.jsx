@@ -7,6 +7,8 @@ import ProtectedRoute from './ProtectedRoute.jsx';
 import ProductPage from '../pages/ProductPage.jsx';
 import CategoryPage from '../pages/CategoryPage.jsx';
 import Layout from '../components/Layout.jsx';
+import PurchasePage from '../pages/PurchasePage.jsx';
+import Suppliers from '../pages/SupplierPage.jsx';
 
 export default function AppRouter() {
   return (
@@ -20,6 +22,8 @@ export default function AppRouter() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/categories" element={<CategoryPage />} />
+          <Route path="/purchases" element={<PurchasePage />} />
+          <Route path="/suppliers" element={<Suppliers />} />
         </Route>
       </Route>
 
