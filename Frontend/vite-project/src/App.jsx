@@ -5,13 +5,15 @@ import Navbar from './components/Navbar.jsx'
 const App = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Navbar */}
       <Navbar />
+
+      {/* Main content should take all available space */}
       <main className="flex-1">
         <AppRouter />
       </main>
-      <footer className="py-6 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} Munna Enterprise — Inventory & Profit System
-      </footer>
+
+      
     </div>
   )
 }

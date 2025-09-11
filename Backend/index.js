@@ -12,6 +12,8 @@ const salesRoutes = require('./routes/salesRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const damageRoutes = require('./routes/damageRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const godownRoutes = require('./routes/godownRoutes');
+const vehicleRoutes = require('./routes/vehicleRoutes');
 
 
 dotenv.config();
@@ -40,6 +42,8 @@ app.use('/api/sales', salesRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/damages', damageRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/godowns', godownRoutes);
+app.use('/api/vehicles', vehicleRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

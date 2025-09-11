@@ -11,28 +11,39 @@ import PurchasePage from '../pages/PurchasePage.jsx';
 import Suppliers from '../pages/SupplierPage.jsx';
 import SalesPage from '../pages/SalesPage.jsx';
 import ExpensePage from '../pages/ExpensePage.jsx';
+import GodownPage from '../pages/Godown.jsx';
+import VehiclePage from '../pages/VehiclesPage';
+import { Toaster } from 'react-hot-toast';
+
 
 
 export default function AppRouter() {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="/login" element={<Login />} />
+    <>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/login" element={<Login />} />
 
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/products" element={<ProductPage />} />
-          <Route path="/categories" element={<CategoryPage />} />
-          <Route path="/purchases" element={<PurchasePage />} />
-          <Route path="/suppliers" element={<Suppliers />} />
-          <Route path="/sales" element={<SalesPage />} />
-          <Route path="/expenses" element={<ExpensePage />} />
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/products" element={<ProductPage />} />
+            <Route path="/categories" element={<CategoryPage />} />
+            <Route path="/purchases" element={<PurchasePage />} />
+            <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/sales" element={<SalesPage />} />
+            <Route path="/expenses" element={<ExpensePage />} />
+            <Route path="/godown" element={<GodownPage />} />
+            <Route path="/vehicles" element={<VehiclePage />} />
+          </Route>
         </Route>
-      </Route>
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      {/* ✅ Toaster mounted once here */}
+      <Toaster position="top-right" reverseOrder={false} />
+    </>
   );
 }
