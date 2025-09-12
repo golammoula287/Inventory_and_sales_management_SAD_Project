@@ -13,6 +13,8 @@ import SalesPage from '../pages/SalesPage.jsx';
 import ExpensePage from '../pages/ExpensePage.jsx';
 import GodownPage from '../pages/Godown.jsx';
 import VehiclePage from '../pages/VehiclesPage';
+import Stock from '../pages/Stock.jsx';
+import ReportPage from '../pages/ReportPage.jsx';
 import { Toaster } from 'react-hot-toast';
 
 
@@ -36,13 +38,15 @@ export default function AppRouter() {
             <Route path="/expenses" element={<ExpensePage />} />
             <Route path="/godown" element={<GodownPage />} />
             <Route path="/vehicles" element={<VehiclePage />} />
+            <Route path="/stock" element={<Stock />} />
+            <Route path="/reports" element={<ReportPage />} />
           </Route>
         </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* ✅ Toaster mounted once here */}
+  
       <Toaster position="top-right" reverseOrder={false} />
     </>
   );

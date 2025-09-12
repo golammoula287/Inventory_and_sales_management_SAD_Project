@@ -14,6 +14,8 @@ const damageRoutes = require('./routes/damageRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const godownRoutes = require('./routes/godownRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 
 dotenv.config();
@@ -44,6 +46,8 @@ app.use('/api/damages', damageRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/godowns', godownRoutes);
 app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/reports', reportRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

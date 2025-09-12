@@ -16,6 +16,7 @@ import {
   ChevronDown,
   ChevronUp,
   Store,
+  Database,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 
@@ -67,6 +68,10 @@ export default function Sidebar() {
           <Link to="/suppliers" className={`flex items-center gap-3 px-3 py-2 rounded-lg ${getLinkClassName("/suppliers")}`}>
             <Users size={18} className="text-white" />
             <span className="text-white">Suppliers</span>
+          </Link>
+          <Link to="/stock" className={`flex items-center gap-3 px-3 py-2 rounded-lg ${getLinkClassName("/stock")}`}>
+            <Database size={18} className="text-white" />
+            <span className="text-white">Stock</span>
           </Link>
           <Link to="/purchases" className={`flex items-center gap-3 px-3 py-2 rounded-lg ${getLinkClassName("/purchases")}`}>
             <TrendingUp size={18} className="text-white" />
