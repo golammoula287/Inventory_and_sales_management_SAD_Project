@@ -1,231 +1,4 @@
 
-// import mongoose from "mongoose";
-// import Sale from "../models/sales.js";
-// import Purchase from "../models/purchase.js";
-// import Godown from "../models/Godown.js";
-// import PDFDocument from "pdfkit";
-// import fs from "fs";
-// import path from "path";
-
-// // 🟢 Add new Sale with Profit/Loss calculation
-// export const addSale = async (req, res) => {
-//   try {
-//     const { productId, customerName, customerPhone, quantity, unitPrice, saleDate, marketName, note } = req.body;
-
-//     if (!productId || !customerName || !customerPhone || !quantity || !unitPrice || !saleDate) {
-//       return res.status(400).json({ message: "Missing required fields" });
-//     }
-
-//     if (!mongoose.Types.ObjectId.isValid(productId)) {
-//       return res.status(400).json({ message: "Invalid productId" });
-//     }
-
-//     const productObjectId = new mongoose.Types.ObjectId(productId);
-//     let remainingQty = quantity;
-//     const godownAllocations = [];
-//     let totalPurchaseCost = 0;
-
-//     // Get purchases for this product
-//     const purchases = await Purchase.find({ productId: productObjectId });
-
-//     for (const purchase of purchases) {
-//       for (const g of purchase.godowns) {
-//         const godownId = g.godownId;
-//         if (!mongoose.Types.ObjectId.isValid(godownId)) continue;
-
-//         const godownObjectId = new mongoose.Types.ObjectId(godownId);
-
-//         // Calculate sold quantity
-//         const soldFromGodown = await Sale.aggregate([
-//           { $unwind: "$godowns" },
-//           { $match: { "godowns.godownId": godownObjectId, productId: productObjectId } },
-//           { $group: { _id: null, totalSold: { $sum: "$godowns.soldQuantity" } } },
-//         ]);
-
-//         const soldQty = soldFromGodown[0]?.totalSold || 0;
-//         const available = g.allocatedQuantity - soldQty;
-//         if (available <= 0) continue;
-
-//         const allocate = Math.min(available, remainingQty);
-//         totalPurchaseCost += allocate * purchase.unitPrice;
-
-//         godownAllocations.push({ godownId: godownObjectId, soldQuantity: allocate });
-//         remainingQty -= allocate;
-
-//         if (remainingQty <= 0) break;
-//       }
-//       if (remainingQty <= 0) break;
-//     }
-
-//     if (remainingQty > 0) {
-//       return res.status(400).json({ message: "Not enough stock in godowns" });
-//     }
-
-//     const totalSaleAmount = quantity * unitPrice;
-//     const profitLoss = totalSaleAmount - totalPurchaseCost;
-
-//     const newSale = new Sale({
-//       productId: productObjectId,
-//       customerName,
-//       customerPhone,
-//       quantity,
-//       unitPrice,
-//       totalAmount: totalSaleAmount,
-//       profitLoss,
-//       saleDate,
-//       marketName,
-//       note,
-//       godowns: godownAllocations,
-//     });
-
-//     await newSale.save();
-
-//     // Update godown available space
-//     for (const g of godownAllocations) {
-//       await Godown.findByIdAndUpdate(g.godownId, { $inc: { availableSpace: -g.soldQuantity } });
-//     }
-
-//     res.status(201).json({ message: "Sale added successfully", sale: newSale });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error adding sale", error: error.message });
-//   }
-// };
-
-// // 🟢 Get all sales
-// export const getSales = async (req, res) => {
-//   try {
-//     const sales = await Sale.find()
-//       .populate("productId", "name")
-//       .populate("godowns.godownId", "location capacity availableSpace");
-//     res.status(200).json(sales);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching sales", error: error.message });
-//   }
-// };
-
-// // 🟢 Get single sale
-// export const getSale = async (req, res) => {
-//   try {
-//     const sale = await Sale.findById(req.params.sale_id)
-//       .populate("productId", "name category")
-//       .populate("godowns.godownId", "location");
-
-//     if (!sale) return res.status(404).json({ message: "Sale not found" });
-
-//     res.status(200).json(sale);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching sale", error: error.message });
-//   }
-// };
-
-// // 🟢 Update sale
-// export const updateSale = async (req, res) => {
-//   try {
-//     const sale = await Sale.findById(req.params.sale_id);
-//     if (!sale) return res.status(404).json({ message: "Sale not found" });
-
-//     // Rollback godown quantities
-//     for (const g of sale.godowns) {
-//       if (mongoose.Types.ObjectId.isValid(g.godownId)) {
-//         await Godown.findByIdAndUpdate(g.godownId, { $inc: { availableSpace: g.soldQuantity } });
-//       }
-//     }
-
-//     // Remove and recreate sale
-//     await Sale.findByIdAndDelete(sale._id);
-//     return addSale(req, res);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error updating sale", error: error.message });
-//   }
-// };
-
-// // 🟢 Delete sale
-// export const deleteSale = async (req, res) => {
-//   try {
-//     const sale = await Sale.findByIdAndDelete(req.params.sale_id);
-//     if (!sale) return res.status(404).json({ message: "Sale not found" });
-
-//     // Rollback godown quantities
-//     for (const g of sale.godowns) {
-//       if (mongoose.Types.ObjectId.isValid(g.godownId)) {
-//         await Godown.findByIdAndUpdate(g.godownId, { $inc: { availableSpace: g.soldQuantity } });
-//       }
-//     }
-
-//     res.status(200).json({ message: "Sale deleted successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error deleting sale", error: error.message });
-//   }
-// };
-
-// // 🟢 Generate Invoice with Table Layout and CORS Fix
-// export const downloadInvoice = async (req, res) => {
-//   try {
-//     const sale = await Sale.findById(req.params.sale_id)
-//       .populate("productId", "name category")
-//       .populate("godowns.godownId", "location");
-
-//     if (!sale) return res.status(404).json({ message: "Sale not found" });
-
-//     // ✅ Add CORS Headers BEFORE sending PDF
-//     res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-//     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//     res.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
-
-//     // ✅ PDF Headers
-//     res.setHeader("Content-Type", "application/pdf");
-//     res.setHeader("Content-Disposition", `attachment; filename=invoice_${sale._id}.pdf`);
-
-//     const doc = new PDFDocument({ margin: 50 });
-
-//     // ✅ Important: Set headers first, then pipe
-//     doc.pipe(res);
-
-//     // Header
-//     doc.fontSize(26);
-//     doc.fillColor("#001a9dff").font("Helvetica-Oblique").text("Munna",  { continued: true });
-//     doc.fillColor("#ffcf66ff").font("Helvetica-Oblique").text(" Enterprise");
-    
-//     doc.moveDown();
-//    doc.fontSize(14).fillColor("black").font("Helvetica").text("Invoice", { align: "Left" });
-//     doc.moveDown();
-
-//     // Customer Details
-//     doc.fontSize(12).text(`Invoice ID: ${sale._id}` , { align: "left" });
-//     doc.text(`Customer: ${sale.customerName}` , { align: "left" });
-//     doc.text(`Phone: ${sale.customerPhone}` , { align: "left" });
-//     doc.text(`Market: ${sale.marketName || "N/A"}` , { align: "left" });
-//     doc.text(`Date: ${new Date(sale.saleDate).toLocaleDateString()}` , { align: "left" });
-//     doc.moveDown();
-
-//     // Table Header
-//     const tableTop = 250;
-//     doc.fontSize(12).text("Product", 50, tableTop);
-//     doc.text("Quantity", 200, tableTop);
-//     doc.text("Unit Price", 300, tableTop);
-//     doc.text("Total", 400, tableTop);
-//     doc.moveTo(50, tableTop + 15).lineTo(560, tableTop + 15).stroke();
-
-//     // Table Data
-//     doc.text(sale.productId?.name, 50, tableTop + 25);
-//     doc.text(sale.quantity, 200, tableTop + 25);
-//     doc.text(sale.unitPrice, 300, tableTop + 25);
-//     doc.text(sale.totalAmount, 400, tableTop + 25);
-//     doc.moveTo(50, tableTop + 45).lineTo(560, tableTop + 45).stroke();
-
-    
-
-//     // Signature
-//     doc.moveDown(4);
-//     doc.text("Authorized Signature", 400, doc.y + 50);
-//     doc.moveTo(400, doc.y + 15).lineTo(550, doc.y + 15).stroke();
-
-//     doc.end();
-//   } catch (error) {
-//     res.status(500).json({ message: "Error generating invoice", error: error.message });
-//   }
-// };
 
 
 
@@ -235,7 +8,7 @@ import Purchase from "../models/purchase.js";
 import Godown from "../models/Godown.js";
 import PDFDocument from "pdfkit";
 
-// 🟢 Add new Sale (multi-product + profit/loss calculation + godown allocation)
+//  Add new Sale (multi-product + profit/loss calculation + godown allocation)
 export const addSale = async (req, res) => {
   try {
     const { items, customerName, customerPhone, saleDate, marketName, note } = req.body;
@@ -327,7 +100,7 @@ export const addSale = async (req, res) => {
   }
 };
 
-// 🟢 Get all sales
+//  Get all sales
 export const getSales = async (req, res) => {
   try {
     const sales = await Sale.find()
@@ -339,7 +112,7 @@ export const getSales = async (req, res) => {
   }
 };
 
-// 🟢 Get single sale
+// 🟢Get single sale
 export const getSale = async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.sale_id)
@@ -354,7 +127,7 @@ export const getSale = async (req, res) => {
   }
 };
 
-// 🟢 Update sale (rollback godown first)
+// Update sale (rollback godown first)
 export const updateSale = async (req, res) => {
   try {
     const existingSale = await Sale.findById(req.params.sale_id);
@@ -375,7 +148,7 @@ export const updateSale = async (req, res) => {
   }
 };
 
-// 🟢 Delete sale (rollback godown)
+//  Delete sale (rollback godown)
 export const deleteSale = async (req, res) => {
   try {
     const sale = await Sale.findByIdAndDelete(req.params.sale_id);
@@ -394,7 +167,7 @@ export const deleteSale = async (req, res) => {
   }
 };
 
-// 🟢 Download Invoice (multi-product)
+//  Download Invoice (multi-product)
 export const downloadInvoice = async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.sale_id)

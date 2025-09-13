@@ -44,7 +44,7 @@ export default function Sidebar() {
   <div className="  py-6 shadow-md flex items-center justify-center">
   <div className="flex flex-col ">
   <h2 className="text-[#E9DFC3] text-2xl font-extrabold tracking-tight italic drop-shadow-lg">
-    <span className="text-[#4E71FF]">Munna</span> Enterprise
+    <span className="text-[#4E71FF]">Munna</span> Traders
   </h2>
   
 </div>

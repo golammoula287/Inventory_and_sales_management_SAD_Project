@@ -3,7 +3,7 @@ import Purchase from "../models/purchase.js";
 import Sale from "../models/sales.js";
 import Product from "../models/product.js";
 
-// 📌 Get Stock by Category
+//  Get Stock by Category
 export const getStockByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
@@ -15,7 +15,7 @@ export const getStockByCategory = async (req, res) => {
     const stockData = [];
 
     for (const p of products) {
-      // ✅ total purchased (sum of all godown allocations for this product)
+      //  total purchased (sum of all godown allocations for this product)
       const purchases = await Purchase.find({ productId: p._id });
       const totalPurchased = purchases.reduce(
         (sum, pur) =>
@@ -27,7 +27,7 @@ export const getStockByCategory = async (req, res) => {
         0
       );
 
-      // ✅ total sold (sum of sale items for this product)
+      //  total sold (sum of sale items for this product)
       const sales = await Sale.find({ "items.productId": p._id });
       const totalSold = sales.reduce(
         (sum, s) =>
@@ -38,7 +38,7 @@ export const getStockByCategory = async (req, res) => {
         0
       );
 
-      // ✅ available stock
+      //  available stock
       const availableStock = totalPurchased - totalSold;
 
       stockData.push({
@@ -53,7 +53,7 @@ export const getStockByCategory = async (req, res) => {
 
     res.json(stockData);
   } catch (err) {
-    console.error("❌ Stock fetch error:", err.message);
+    console.error(" Stock fetch error:", err.message);
     res
       .status(500)
       .json({ message: "Error fetching stock", error: err.message });
