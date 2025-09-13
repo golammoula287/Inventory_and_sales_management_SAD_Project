@@ -1,5 +1,5 @@
 const express = require('express');
-const { addSale, getSales, getSale, updateSale, deleteSale } = require('../controllers/salesController');
+const { addSale, getSales, getSale, updateSale, deleteSale ,downloadInvoice } = require('../controllers/salesController');
 const router = express.Router();
 
 // Routes
@@ -8,6 +8,8 @@ router.get('/', getSales);
 router.get('/:sale_id', getSale);
 router.put('/:sale_id', updateSale);
 router.delete('/:sale_id', deleteSale);
+router.get("/:sale_id/invoice", downloadInvoice);
 
-module.exports = router; // ✅ Export router using CommonJS
+
+module.exports = router; 
 

@@ -1,114 +1,116 @@
 
-
-
-
 // import mongoose from "mongoose";
 // import Sale from "../models/sales.js";
 // import Purchase from "../models/purchase.js";
 // import Godown from "../models/Godown.js";
+// import PDFDocument from "pdfkit";
+// import fs from "fs";
+// import path from "path";
 
-// // ✅ Add new sale
+// // 🟢 Add new Sale with Profit/Loss calculation
 // export const addSale = async (req, res) => {
 //   try {
-//     const {
-//       productId,
-//       customerName,
-//       customerPhone,
-//       quantity,
-//       unitPrice,
-//       totalAmount,
-//       saleDate,
-//       marketName,
-//       note,
-//       godowns,
-//     } = req.body;
+//     const { productId, customerName, customerPhone, quantity, unitPrice, saleDate, marketName, note } = req.body;
 
-//     if (!productId || !customerName || !customerPhone || !quantity || !unitPrice || !totalAmount || !saleDate) {
+//     if (!productId || !customerName || !customerPhone || !quantity || !unitPrice || !saleDate) {
 //       return res.status(400).json({ message: "Missing required fields" });
 //     }
 
-//     if (!Array.isArray(godowns) || godowns.length === 0) {
-//       return res.status(400).json({ message: "Godown allocation is required" });
+//     if (!mongoose.Types.ObjectId.isValid(productId)) {
+//       return res.status(400).json({ message: "Invalid productId" });
 //     }
 
-//     const totalAllocated = godowns.reduce((sum, g) => sum + (g.soldQuantity || 0), 0);
-//     if (totalAllocated !== quantity) {
-//       return res.status(400).json({ message: "Sold quantities must match total sale quantity" });
+//     const productObjectId = new mongoose.Types.ObjectId(productId);
+//     let remainingQty = quantity;
+//     const godownAllocations = [];
+//     let totalPurchaseCost = 0;
+
+//     // Get purchases for this product
+//     const purchases = await Purchase.find({ productId: productObjectId });
+
+//     for (const purchase of purchases) {
+//       for (const g of purchase.godowns) {
+//         const godownId = g.godownId;
+//         if (!mongoose.Types.ObjectId.isValid(godownId)) continue;
+
+//         const godownObjectId = new mongoose.Types.ObjectId(godownId);
+
+//         // Calculate sold quantity
+//         const soldFromGodown = await Sale.aggregate([
+//           { $unwind: "$godowns" },
+//           { $match: { "godowns.godownId": godownObjectId, productId: productObjectId } },
+//           { $group: { _id: null, totalSold: { $sum: "$godowns.soldQuantity" } } },
+//         ]);
+
+//         const soldQty = soldFromGodown[0]?.totalSold || 0;
+//         const available = g.allocatedQuantity - soldQty;
+//         if (available <= 0) continue;
+
+//         const allocate = Math.min(available, remainingQty);
+//         totalPurchaseCost += allocate * purchase.unitPrice;
+
+//         godownAllocations.push({ godownId: godownObjectId, soldQuantity: allocate });
+//         remainingQty -= allocate;
+
+//         if (remainingQty <= 0) break;
+//       }
+//       if (remainingQty <= 0) break;
 //     }
 
-//     // Check stock in each godown
-//     for (const g of godowns) {
-//       if (!mongoose.Types.ObjectId.isValid(g.godownId)) {
-//         return res.status(400).json({ message: `Invalid godownId: ${g.godownId}` });
-//       }
-
-//       const purchase = await Purchase.findOne({ productId, "godowns.godownId": g.godownId });
-//       if (!purchase) {
-//         return res.status(404).json({ message: `Purchase not found for godown: ${g.godownId}` });
-//       }
-
-//       const godownStock = purchase.stock;
-//       if (g.soldQuantity > godownStock) {
-//         return res.status(400).json({ message: `Not enough stock in godown ${g.godownId}` });
-//       }
+//     if (remainingQty > 0) {
+//       return res.status(400).json({ message: "Not enough stock in godowns" });
 //     }
+
+//     const totalSaleAmount = quantity * unitPrice;
+//     const profitLoss = totalSaleAmount - totalPurchaseCost;
 
 //     const newSale = new Sale({
-//       productId,
+//       productId: productObjectId,
 //       customerName,
 //       customerPhone,
 //       quantity,
 //       unitPrice,
-//       totalAmount,
+//       totalAmount: totalSaleAmount,
+//       profitLoss,
 //       saleDate,
 //       marketName,
 //       note,
-//       godowns,
+//       godowns: godownAllocations,
 //     });
 
 //     await newSale.save();
 
-//     // Update stock in purchases and godowns
-//     for (const g of godowns) {
-//       const purchase = await Purchase.findOne({ productId, "godowns.godownId": g.godownId });
-//       purchase.stock -= g.soldQuantity;
-//       if (purchase.stock < 0) purchase.stock = 0;
-//       await purchase.save();
-
-//       await Godown.findByIdAndUpdate(g.godownId, {
-//         $inc: { availableSpace: g.soldQuantity },
-//       });
+//     // Update godown available space
+//     for (const g of godownAllocations) {
+//       await Godown.findByIdAndUpdate(g.godownId, { $inc: { availableSpace: -g.soldQuantity } });
 //     }
 
-//     res.status(201).json({ message: "Sale recorded successfully", sale: newSale });
+//     res.status(201).json({ message: "Sale added successfully", sale: newSale });
 //   } catch (error) {
-//     console.error("Add Sale Error:", error);
 //     res.status(500).json({ message: "Error adding sale", error: error.message });
 //   }
 // };
 
-// // ✅ Get all sales
+// // 🟢 Get all sales
 // export const getSales = async (req, res) => {
 //   try {
 //     const sales = await Sale.find()
 //       .populate("productId", "name")
-//       .populate("godowns.godownId", "godownId location capacity availableSpace");
+//       .populate("godowns.godownId", "location capacity availableSpace");
 //     res.status(200).json(sales);
 //   } catch (error) {
 //     res.status(500).json({ message: "Error fetching sales", error: error.message });
 //   }
 // };
 
-// // ✅ Get single sale
+// // 🟢 Get single sale
 // export const getSale = async (req, res) => {
 //   try {
 //     const sale = await Sale.findById(req.params.sale_id)
 //       .populate("productId", "name category")
-//       .populate("godowns.godownId", "godownId location capacity availableSpace");
+//       .populate("godowns.godownId", "location");
 
-//     if (!sale) {
-//       return res.status(404).json({ message: "Sale not found" });
-//     }
+//     if (!sale) return res.status(404).json({ message: "Sale not found" });
 
 //     res.status(200).json(sale);
 //   } catch (error) {
@@ -116,64 +118,38 @@
 //   }
 // };
 
-// // ✅ Update sale
+// // 🟢 Update sale
 // export const updateSale = async (req, res) => {
 //   try {
 //     const sale = await Sale.findById(req.params.sale_id);
 //     if (!sale) return res.status(404).json({ message: "Sale not found" });
 
-//     // Rollback stock from old sale
+//     // Rollback godown quantities
 //     for (const g of sale.godowns) {
-//       const purchase = await Purchase.findOne({ productId: sale.productId, "godowns.godownId": g.godownId });
-//       if (purchase) {
-//         purchase.stock += g.soldQuantity;
-//         await purchase.save();
+//       if (mongoose.Types.ObjectId.isValid(g.godownId)) {
+//         await Godown.findByIdAndUpdate(g.godownId, { $inc: { availableSpace: g.soldQuantity } });
 //       }
-//       await Godown.findByIdAndUpdate(g.godownId, {
-//         $inc: { availableSpace: -g.soldQuantity },
-//       });
 //     }
 
-//     // Update sale
-//     const updatedSale = await Sale.findByIdAndUpdate(req.params.sale_id, req.body, { new: true })
-//       .populate("productId", "name")
-//       .populate("godowns.godownId", "godownId location capacity availableSpace");
-
-//     // Apply new stock deduction
-//     for (const g of updatedSale.godowns) {
-//       const purchase = await Purchase.findOne({ productId: updatedSale.productId, "godowns.godownId": g.godownId });
-//       if (purchase) {
-//         purchase.stock -= g.soldQuantity;
-//         if (purchase.stock < 0) purchase.stock = 0;
-//         await purchase.save();
-//       }
-//       await Godown.findByIdAndUpdate(g.godownId, {
-//         $inc: { availableSpace: g.soldQuantity },
-//       });
-//     }
-
-//     res.status(200).json({ message: "Sale updated successfully", sale: updatedSale });
+//     // Remove and recreate sale
+//     await Sale.findByIdAndDelete(sale._id);
+//     return addSale(req, res);
 //   } catch (error) {
 //     res.status(500).json({ message: "Error updating sale", error: error.message });
 //   }
 // };
 
-// // ✅ Delete sale
+// // 🟢 Delete sale
 // export const deleteSale = async (req, res) => {
 //   try {
 //     const sale = await Sale.findByIdAndDelete(req.params.sale_id);
 //     if (!sale) return res.status(404).json({ message: "Sale not found" });
 
-//     // Rollback stock
+//     // Rollback godown quantities
 //     for (const g of sale.godowns) {
-//       const purchase = await Purchase.findOne({ productId: sale.productId, "godowns.godownId": g.godownId });
-//       if (purchase) {
-//         purchase.stock += g.soldQuantity;
-//         await purchase.save();
+//       if (mongoose.Types.ObjectId.isValid(g.godownId)) {
+//         await Godown.findByIdAndUpdate(g.godownId, { $inc: { availableSpace: g.soldQuantity } });
 //       }
-//       await Godown.findByIdAndUpdate(g.godownId, {
-//         $inc: { availableSpace: -g.soldQuantity },
-//       });
 //     }
 
 //     res.status(200).json({ message: "Sale deleted successfully" });
@@ -182,124 +158,193 @@
 //   }
 // };
 
+// // 🟢 Generate Invoice with Table Layout and CORS Fix
+// export const downloadInvoice = async (req, res) => {
+//   try {
+//     const sale = await Sale.findById(req.params.sale_id)
+//       .populate("productId", "name category")
+//       .populate("godowns.godownId", "location");
+
+//     if (!sale) return res.status(404).json({ message: "Sale not found" });
+
+//     // ✅ Add CORS Headers BEFORE sending PDF
+//     res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+//     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//     res.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+
+//     // ✅ PDF Headers
+//     res.setHeader("Content-Type", "application/pdf");
+//     res.setHeader("Content-Disposition", `attachment; filename=invoice_${sale._id}.pdf`);
+
+//     const doc = new PDFDocument({ margin: 50 });
+
+//     // ✅ Important: Set headers first, then pipe
+//     doc.pipe(res);
+
+//     // Header
+//     doc.fontSize(26);
+//     doc.fillColor("#001a9dff").font("Helvetica-Oblique").text("Munna",  { continued: true });
+//     doc.fillColor("#ffcf66ff").font("Helvetica-Oblique").text(" Enterprise");
+    
+//     doc.moveDown();
+//    doc.fontSize(14).fillColor("black").font("Helvetica").text("Invoice", { align: "Left" });
+//     doc.moveDown();
+
+//     // Customer Details
+//     doc.fontSize(12).text(`Invoice ID: ${sale._id}` , { align: "left" });
+//     doc.text(`Customer: ${sale.customerName}` , { align: "left" });
+//     doc.text(`Phone: ${sale.customerPhone}` , { align: "left" });
+//     doc.text(`Market: ${sale.marketName || "N/A"}` , { align: "left" });
+//     doc.text(`Date: ${new Date(sale.saleDate).toLocaleDateString()}` , { align: "left" });
+//     doc.moveDown();
+
+//     // Table Header
+//     const tableTop = 250;
+//     doc.fontSize(12).text("Product", 50, tableTop);
+//     doc.text("Quantity", 200, tableTop);
+//     doc.text("Unit Price", 300, tableTop);
+//     doc.text("Total", 400, tableTop);
+//     doc.moveTo(50, tableTop + 15).lineTo(560, tableTop + 15).stroke();
+
+//     // Table Data
+//     doc.text(sale.productId?.name, 50, tableTop + 25);
+//     doc.text(sale.quantity, 200, tableTop + 25);
+//     doc.text(sale.unitPrice, 300, tableTop + 25);
+//     doc.text(sale.totalAmount, 400, tableTop + 25);
+//     doc.moveTo(50, tableTop + 45).lineTo(560, tableTop + 45).stroke();
+
+    
+
+//     // Signature
+//     doc.moveDown(4);
+//     doc.text("Authorized Signature", 400, doc.y + 50);
+//     doc.moveTo(400, doc.y + 15).lineTo(550, doc.y + 15).stroke();
+
+//     doc.end();
+//   } catch (error) {
+//     res.status(500).json({ message: "Error generating invoice", error: error.message });
+//   }
+// };
+
+
 
 import mongoose from "mongoose";
 import Sale from "../models/sales.js";
 import Purchase from "../models/purchase.js";
 import Godown from "../models/Godown.js";
+import PDFDocument from "pdfkit";
 
-// ✅ Add new sale
+// 🟢 Add new Sale (multi-product + profit/loss calculation + godown allocation)
 export const addSale = async (req, res) => {
   try {
-    const {
-      productId,
-      customerName,
-      customerPhone,
-      quantity,
-      unitPrice,
-      saleDate,
-      marketName,
-      note,
-    } = req.body;
+    const { items, customerName, customerPhone, saleDate, marketName, note } = req.body;
 
-    // Validate required fields
-    if (!productId || !customerName || !customerPhone || !quantity || !unitPrice || !saleDate) {
-      return res.status(400).json({ message: "Missing required fields" });
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: "At least one product is required" });
     }
 
-    // Validate ObjectId
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ message: "Invalid productId" });
-    }
-    const productObjectId = new mongoose.Types.ObjectId(productId);
+    let totalSaleAmount = 0;
+    let totalPurchaseCost = 0;
+    const processedItems = [];
 
-    let remainingQty = quantity;
-    const godownAllocations = [];
+    for (const item of items) {
+      if (!mongoose.Types.ObjectId.isValid(item.productId)) {
+        return res.status(400).json({ message: `Invalid productId: ${item.productId}` });
+      }
 
-    // Find purchases with this product
-    const purchases = await Purchase.find({ productId: productObjectId });
+      const productObjectId = new mongoose.Types.ObjectId(item.productId);
+      let remainingQty = item.quantity;
+      let allocatedGodownId = null;
 
-    for (const purchase of purchases) {
-      for (const g of purchase.godowns) {
-        const godownId = g.godownId;
-        if (!mongoose.Types.ObjectId.isValid(godownId)) continue;
+      const purchases = await Purchase.find({ productId: productObjectId });
 
-        const godownObjectId = new mongoose.Types.ObjectId(godownId);
+      for (const purchase of purchases) {
+        for (const g of purchase.godowns) {
+          const godownId = g.godownId;
+          if (!mongoose.Types.ObjectId.isValid(godownId)) continue;
 
-        // Calculate already sold quantity from this godown
-        const soldFromGodown = await Sale.aggregate([
-          { $unwind: "$godowns" },
-          {
-            $match: {
-              "godowns.godownId": godownObjectId,
-              productId: productObjectId,
-            },
-          },
-          { $group: { _id: null, totalSold: { $sum: "$godowns.soldQuantity" } } },
-        ]);
+          const godownObjectId = new mongoose.Types.ObjectId(godownId);
 
-        const soldQty = soldFromGodown[0]?.totalSold || 0;
-        const available = g.allocatedQuantity - soldQty;
-        if (available <= 0) continue;
+          // Already sold qty from this godown
+          const soldFromGodown = await Sale.aggregate([
+            { $unwind: "$items" },
+            { $match: { "items.godownId": godownObjectId, "items.productId": productObjectId } },
+            { $group: { _id: null, totalSold: { $sum: "$items.quantity" } } },
+          ]);
 
-        const allocate = Math.min(available, remainingQty);
-        godownAllocations.push({ godownId: godownObjectId, soldQuantity: allocate });
+          const soldQty = soldFromGodown[0]?.totalSold || 0;
+          const available = g.allocatedQuantity - soldQty;
+          if (available <= 0) continue;
 
-        remainingQty -= allocate;
+          const allocate = Math.min(available, remainingQty);
+          totalPurchaseCost += allocate * purchase.unitPrice;
+
+          // Update godown available space immediately
+          await Godown.findByIdAndUpdate(godownId, { $inc: { availableSpace: -allocate } });
+
+          allocatedGodownId = godownObjectId;
+          remainingQty -= allocate;
+
+          if (remainingQty <= 0) break;
+        }
         if (remainingQty <= 0) break;
       }
-      if (remainingQty <= 0) break;
+
+      if (remainingQty > 0) {
+        return res.status(400).json({ message: "Not enough stock in godowns" });
+      }
+
+      const total = item.quantity * item.unitPrice;
+      totalSaleAmount += total;
+
+      processedItems.push({
+        productId: productObjectId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        total,
+        godownId: allocatedGodownId,
+      });
     }
 
-    if (remainingQty > 0) return res.status(400).json({ message: "Not enough stock in godowns" });
-
-    const totalAmount = quantity * unitPrice;
+    const profitLoss = totalSaleAmount - totalPurchaseCost;
 
     const newSale = new Sale({
-      productId: productObjectId,
+      items: processedItems,
       customerName,
       customerPhone,
-      quantity,
-      unitPrice,
-      totalAmount,
       saleDate,
       marketName,
       note,
-      godowns: godownAllocations,
+      totalAmount: totalSaleAmount,
+      profitLoss,
     });
 
     await newSale.save();
-
-    // Update godown availableSpace
-    for (const g of godownAllocations) {
-      await Godown.findByIdAndUpdate(g.godownId, { $inc: { availableSpace: -g.soldQuantity } });
-    }
-
     res.status(201).json({ message: "Sale added successfully", sale: newSale });
   } catch (error) {
-    console.error("Add Sale Error:", error);
     res.status(500).json({ message: "Error adding sale", error: error.message });
   }
 };
 
-// ✅ Get all sales
+// 🟢 Get all sales
 export const getSales = async (req, res) => {
   try {
     const sales = await Sale.find()
-      .populate("productId", "name")
-      .populate("godowns.godownId", "godownId location capacity availableSpace");
+      .populate("items.productId", "name category")
+      .populate("items.godownId", "location capacity availableSpace");
     res.status(200).json(sales);
   } catch (error) {
     res.status(500).json({ message: "Error fetching sales", error: error.message });
   }
 };
 
-// ✅ Get single sale
+// 🟢 Get single sale
 export const getSale = async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.sale_id)
-      .populate("productId", "name category")
-      .populate("godowns.godownId", "godownId location capacity availableSpace");
+      .populate("items.productId", "name category")
+      .populate("items.godownId", "location");
 
     if (!sale) return res.status(404).json({ message: "Sale not found" });
 
@@ -309,48 +354,109 @@ export const getSale = async (req, res) => {
   }
 };
 
-// ✅ Update sale
+// 🟢 Update sale (rollback godown first)
 export const updateSale = async (req, res) => {
   try {
-    const sale = await Sale.findById(req.params.sale_id);
-    if (!sale) return res.status(404).json({ message: "Sale not found" });
+    const existingSale = await Sale.findById(req.params.sale_id);
+    if (!existingSale) return res.status(404).json({ message: "Sale not found" });
 
-    // Rollback previous godown allocations
-    for (const g of sale.godowns) {
-      if (mongoose.Types.ObjectId.isValid(g.godownId)) {
-        await Godown.findByIdAndUpdate(new mongoose.Types.ObjectId(g.godownId), {
-          $inc: { availableSpace: g.soldQuantity },
-        });
+    // Rollback godown quantities from old sale
+    for (const item of existingSale.items) {
+      if (mongoose.Types.ObjectId.isValid(item.godownId)) {
+        await Godown.findByIdAndUpdate(item.godownId, { $inc: { availableSpace: item.quantity } });
       }
     }
 
-    // Delete previous sale to recalc allocations
-    await Sale.findByIdAndDelete(sale._id);
-
-    // Reuse addSale logic with updated body
+    // Delete old sale and create new
+    await Sale.findByIdAndDelete(existingSale._id);
     return addSale(req, res);
   } catch (error) {
     res.status(500).json({ message: "Error updating sale", error: error.message });
   }
 };
 
-// ✅ Delete sale
+// 🟢 Delete sale (rollback godown)
 export const deleteSale = async (req, res) => {
   try {
     const sale = await Sale.findByIdAndDelete(req.params.sale_id);
     if (!sale) return res.status(404).json({ message: "Sale not found" });
 
-    // Rollback godown availableSpace
-    for (const g of sale.godowns) {
-      if (mongoose.Types.ObjectId.isValid(g.godownId)) {
-        await Godown.findByIdAndUpdate(new mongoose.Types.ObjectId(g.godownId), {
-          $inc: { availableSpace: g.soldQuantity },
-        });
+    // Rollback godown stock
+    for (const item of sale.items) {
+      if (mongoose.Types.ObjectId.isValid(item.godownId)) {
+        await Godown.findByIdAndUpdate(item.godownId, { $inc: { availableSpace: item.quantity } });
       }
     }
 
     res.status(200).json({ message: "Sale deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting sale", error: error.message });
+  }
+};
+
+// 🟢 Download Invoice (multi-product)
+export const downloadInvoice = async (req, res) => {
+  try {
+    const sale = await Sale.findById(req.params.sale_id)
+      .populate("items.productId", "name category")
+      .populate("items.godownId", "location");
+
+    if (!sale) return res.status(404).json({ message: "Sale not found" });
+
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename=invoice_${sale._id}.pdf`);
+
+    const doc = new PDFDocument({ margin: 50 });
+    doc.pipe(res);
+
+    // Header
+    doc.fontSize(26).fillColor("#001a9dff").text("Munna", { continued: true });
+    doc.fillColor("#ffcf66ff").text(" Enterprise");
+
+    doc.moveDown();
+    doc.fontSize(14).fillColor("black").text("Invoice");
+
+    doc.moveDown();
+    doc.fontSize(12).text(`Invoice ID: ${sale._id}`);
+    doc.text(`Customer: ${sale.customerName}`);
+    doc.text(`Phone: ${sale.customerPhone}`);
+    doc.text(`Market: ${sale.marketName || "N/A"}`);
+    doc.text(`Date: ${new Date(sale.saleDate).toLocaleDateString()}`);
+    doc.moveDown();
+
+    // Table Header
+    const tableTop = 250;
+    doc.fontSize(12).text("Product", 50, tableTop);
+    doc.text("Qty", 200, tableTop);
+    doc.text("Unit Price", 300, tableTop);
+    doc.text("Total", 400, tableTop);
+    doc.moveTo(50, tableTop + 15).lineTo(560, tableTop + 15).stroke();
+
+    // Table Data
+    let position = tableTop + 25;
+    sale.items.forEach((item) => {
+      doc.text(item.productId?.name || "N/A", 50, position);
+      doc.text(item.quantity.toString(), 200, position);
+      doc.text(item.unitPrice.toFixed(2), 300, position);
+      doc.text(item.total.toFixed(2), 400, position);
+      position += 20;
+    });
+
+    doc.moveTo(50, position).lineTo(560, position).stroke();
+    doc.fontSize(12).text(`Total Amount: ${sale.totalAmount.toFixed(2)}`, 400, position + 20);
+
+    // Signature
+    doc.moveDown(4);
+    doc.text("Authorized Signature", 400, doc.y + 50);
+    doc.moveTo(400, doc.y + 15).lineTo(550, doc.y + 15).stroke();
+
+    doc.end();
+  } catch (error) {
+    res.status(500).json({ message: "Error generating invoice", error: error.message });
   }
 };

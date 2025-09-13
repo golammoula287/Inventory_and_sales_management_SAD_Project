@@ -1,420 +1,37 @@
 
-
-
-// import React, { useState, useEffect } from "react";
-// import { Pencil, Trash2 } from "lucide-react";
-// import Button from "../components/Button";
-// import api from "../services/apiClient.js";
-
-// export default function SalesPage() {
-//   const [sales, setSales] = useState([]);
-//   const [products, setProducts] = useState([]);
-//   const [godowns, setGodowns] = useState([]);
-//   const [loadingData, setLoadingData] = useState(true);
-//   const [form, setForm] = useState({
-//     id: null,
-//     productId: "",
-//     saleDate: "",
-//     marketName: "",
-//     quantity: "",
-//     unitPrice: "",
-//     totalAmount: 0,
-//     customerName: "",
-//     customerPhone: "",
-//     godownId: "", // single godown selection
-//   });
-//   const [isEditing, setIsEditing] = useState(false);
-//   const [errors, setErrors] = useState({});
-//   const [loading, setLoading] = useState(false);
-
-//   const SALES_API = "/sales";
-//   const PRODUCT_API = "/products";
-//   const GODOWN_API = "/godowns"; // fetch available godowns
-
-//   /** Fetch sales + products + godowns */
-//   const fetchData = async () => {
-//     setLoadingData(true);
-//     try {
-//       const [resSales, resProducts, resGodowns] = await Promise.all([
-//         api.get(SALES_API),
-//         api.get(PRODUCT_API),
-//         api.get(GODOWN_API),
-//       ]);
-//       setSales(resSales.data || []);
-//       setProducts(resProducts.data || []);
-//       setGodowns(resGodowns.data || []);
-//     } catch (err) {
-//       console.error("Error fetching data:", err.response?.data || err.message);
-//     } finally {
-//       setLoadingData(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   /** Handle input change and calculate totalAmount */
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setForm((prev) => {
-//       const updated = { ...prev, [name]: value };
-//       const qty = parseFloat(updated.quantity) || 0;
-//       const price = parseFloat(updated.unitPrice) || 0;
-//       updated.totalAmount = qty * price;
-//       return updated;
-//     });
-//   };
-
-//   /** Validate form */
-//   const validateForm = () => {
-//     const newErrors = {};
-//     if (!form.productId) newErrors.productId = "Product is required.";
-//     if (!form.saleDate) newErrors.saleDate = "Sale date is required.";
-//     if (!form.marketName) newErrors.marketName = "Market name is required.";
-//     if (!form.quantity) newErrors.quantity = "Quantity is required.";
-//     if (!form.unitPrice) newErrors.unitPrice = "Unit price is required.";
-//     if (!form.customerName) newErrors.customerName = "Customer name is required.";
-//     if (!form.customerPhone) newErrors.customerPhone = "Customer phone is required.";
-//     if (!form.godownId) newErrors.godownId = "Godown is required.";
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
-
-//   /** Create Sale */
-//   const handleCreate = async (e) => {
-//     e.preventDefault();
-//     if (!validateForm()) return;
-//     setLoading(true);
-//     try {
-//       await api.post(SALES_API, {
-//         productId: form.productId,
-//         saleDate: form.saleDate,
-//         marketName: form.marketName,
-//         quantity: parseFloat(form.quantity),
-//         unitPrice: parseFloat(form.unitPrice),
-//         totalAmount: form.totalAmount,
-//         customerName: form.customerName,
-//         customerPhone: form.customerPhone,
-//         godowns: [
-//           { godownId: form.godownId, soldQuantity: parseFloat(form.quantity) },
-//         ],
-//       });
-//       fetchData();
-//       resetForm();
-//     } catch (err) {
-//       console.error("Error creating sale:", err.response?.data || err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   /** Update Sale */
-//   const handleUpdate = async (e) => {
-//     e.preventDefault();
-//     if (!validateForm()) return;
-//     setLoading(true);
-//     try {
-//       await api.put(`${SALES_API}/${form.id}`, {
-//         productId: form.productId,
-//         saleDate: form.saleDate,
-//         marketName: form.marketName,
-//         quantity: parseFloat(form.quantity),
-//         unitPrice: parseFloat(form.unitPrice),
-//         totalAmount: form.totalAmount,
-//         customerName: form.customerName,
-//         customerPhone: form.customerPhone,
-//         godowns: [
-//           { godownId: form.godownId, soldQuantity: parseFloat(form.quantity) },
-//         ],
-//       });
-//       fetchData();
-//       resetForm();
-//       setIsEditing(false);
-//     } catch (err) {
-//       console.error("Error updating sale:", err.response?.data || err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   /** Delete Sale */
-//   const handleDelete = async (id) => {
-//     try {
-//       await api.delete(`${SALES_API}/${id}`);
-//       fetchData();
-//     } catch (err) {
-//       console.error("Error deleting sale:", err.response?.data || err.message);
-//     }
-//   };
-
-//   /** Edit Sale */
-//   const handleEdit = (sale) => {
-//     setForm({
-//       id: sale._id,
-//       productId: sale.productId?._id || sale.productId,
-//       saleDate: sale.saleDate.split("T")[0],
-//       marketName: sale.marketName,
-//       quantity: sale.quantity,
-//       unitPrice: sale.unitPrice,
-//       totalAmount: sale.totalAmount,
-//       customerName: sale.customerName,
-//       customerPhone: sale.customerPhone,
-//       godownId: sale.godowns?.[0]?.godownId || "",
-//     });
-//     setIsEditing(true);
-//   };
-
-//   /** Reset Form */
-//   const resetForm = () => {
-//     setForm({
-//       id: null,
-//       productId: "",
-//       saleDate: "",
-//       marketName: "",
-//       quantity: "",
-//       unitPrice: "",
-//       totalAmount: 0,
-//       customerName: "",
-//       customerPhone: "",
-//       godownId: "",
-//     });
-//     setErrors({});
-//   };
-
-//   return (
-//     <div className="p-8 bg-gray-50">
-//       <h1 className="text-3xl font-semibold mb-6 text-gray-900">Sales Management</h1>
-
-//       {loadingData ? (
-//         <div className="text-center text-gray-500 py-6">Loading data...</div>
-//       ) : (
-//         <>
-//           {/* Form */}
-//           <form
-//             onSubmit={isEditing ? handleUpdate : handleCreate}
-//             className="bg-white p-6 shadow-lg rounded-lg mb-8"
-//           >
-//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-//               {/* Product */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Product</label>
-//                 <select
-//                   name="productId"
-//                   value={form.productId}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                 >
-//                   <option value="">Select Product</option>
-//                   {products.map((prod) => (
-//                     <option key={prod._id} value={prod._id}>{prod.name}</option>
-//                   ))}
-//                 </select>
-//                 {errors.productId && <span className="text-sm text-red-500">{errors.productId}</span>}
-//               </div>
-
-//               {/* Sale Date */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Sale Date</label>
-//                 <input
-//                   type="date"
-//                   name="saleDate"
-//                   value={form.saleDate}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                 />
-//                 {errors.saleDate && <span className="text-sm text-red-500">{errors.saleDate}</span>}
-//               </div>
-
-//               {/* Market Name */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Market Name</label>
-//                 <input
-//                   type="text"
-//                   name="marketName"
-//                   value={form.marketName}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                   placeholder="Enter market name"
-//                 />
-//                 {errors.marketName && <span className="text-sm text-red-500">{errors.marketName}</span>}
-//               </div>
-
-//               {/* Quantity */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Quantity</label>
-//                 <input
-//                   type="number"
-//                   name="quantity"
-//                   value={form.quantity}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                   placeholder="Enter quantity"
-//                 />
-//                 {errors.quantity && <span className="text-sm text-red-500">{errors.quantity}</span>}
-//               </div>
-
-//               {/* Unit Price */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Unit Price</label>
-//                 <input
-//                   type="number"
-//                   name="unitPrice"
-//                   value={form.unitPrice}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                   placeholder="Enter unit price"
-//                 />
-//                 {errors.unitPrice && <span className="text-sm text-red-500">{errors.unitPrice}</span>}
-//               </div>
-
-//               {/* Total Amount */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Total Amount</label>
-//                 <input
-//                   type="number"
-//                   name="totalAmount"
-//                   value={form.totalAmount}
-//                   readOnly
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full bg-gray-100"
-//                   placeholder="Total amount"
-//                 />
-//               </div>
-
-//               {/* Customer Name */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Customer Name</label>
-//                 <input
-//                   type="text"
-//                   name="customerName"
-//                   value={form.customerName}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                   placeholder="Enter customer name"
-//                 />
-//                 {errors.customerName && <span className="text-sm text-red-500">{errors.customerName}</span>}
-//               </div>
-
-//               {/* Customer Phone */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Customer Phone</label>
-//                 <input
-//                   type="text"
-//                   name="customerPhone"
-//                   value={form.customerPhone}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                   placeholder="Enter customer phone"
-//                 />
-//                 {errors.customerPhone && <span className="text-sm text-red-500">{errors.customerPhone}</span>}
-//               </div>
-
-//               {/* Godown */}
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Godown</label>
-//                 <select
-//                   name="godownId"
-//                   value={form.godownId}
-//                   onChange={handleChange}
-//                   className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-//                 >
-//                   <option value="">Select Godown</option>
-//                   {godowns.map((g) => (
-//                     <option key={g._id} value={g._id}>
-//                       {g.godownId} - {g.location} (Available: {g.availableSpace})
-//                     </option>
-//                   ))}
-//                 </select>
-//                 {errors.godownId && <span className="text-sm text-red-500">{errors.godownId}</span>}
-//               </div>
-//             </div>
-
-//             <Button type="submit" className="mt-6 w-full" disabled={loading}>
-//               {loading ? "Processing..." : isEditing ? "Update Sale" : "Add Sale"}
-//             </Button>
-//           </form>
-
-//           {/* Table */}
-//           <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-//             <table className="min-w-full table-auto">
-//               <thead className="bg-gray-100">
-//                 <tr>
-//                   <th className="py-3 px-4">Product</th>
-//                   <th className="py-3 px-4">Market</th>
-//                   <th className="py-3 px-4">Qty</th>
-//                   <th className="py-3 px-4">Unit Price</th>
-//                   <th className="py-3 px-4">Total</th>
-//                   <th className="py-3 px-4">Customer</th>
-//                   <th className="py-3 px-4">Date</th>
-//                   <th className="py-3 px-4">Actions</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {sales.map((sale) => (
-//                   <tr key={sale._id} className="border-t hover:bg-gray-50">
-//                     <td className="py-3 px-4">{sale.productId?.name || "—"}</td>
-//                     <td className="py-3 px-4">{sale.marketName}</td>
-//                     <td className="py-3 px-4">{sale.quantity}</td>
-//                     <td className="py-3 px-4">{sale.unitPrice}</td>
-//                     <td className="py-3 px-4">{sale.totalAmount}</td>
-//                     <td className="py-3 px-4">{sale.customerName} ({sale.customerPhone})</td>
-//                     <td className="py-3 px-4">{new Date(sale.saleDate).toLocaleDateString()}</td>
-//                     <td className="py-3 px-4 flex gap-4">
-//                       <button onClick={() => handleEdit(sale)} className="text-blue-600 hover:text-blue-800">
-//                         <Pencil size={20} />
-//                       </button>
-//                       <button onClick={() => handleDelete(sale._id)} className="text-red-600 hover:text-red-800">
-//                         <Trash2 size={20} />
-//                       </button>
-//                     </td>
-//                   </tr>
-//                 ))}
-//                 {sales.length === 0 && (
-//                   <tr>
-//                     <td colSpan="8" className="text-center py-4 text-gray-500">
-//                       No sales available.
-//                     </td>
-//                   </tr>
-//                 )}
-//               </tbody>
-//             </table>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// }
-
-
-
 import React, { useState, useEffect } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Download, Eye, PlusCircle, MinusCircle } from "lucide-react";
 import Button from "../components/Button";
 import api from "../services/apiClient.js";
+import toast from "react-hot-toast";
 
 export default function SalesPage() {
   const [sales, setSales] = useState([]);
   const [products, setProducts] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
-  const [form, setForm] = useState({
-    id: null,
-    productId: "",
-    saleDate: "",
-    marketName: "",
-    quantity: "",
-    unitPrice: "",
-    totalAmount: 0,
-    customerName: "",
-    customerPhone: "",
-  });
+  const [search, setSearch] = useState("");
+  const [form, setForm] = useState(initialFormState());
   const [isEditing, setIsEditing] = useState(false);
+  const [viewSale, setViewSale] = useState(null);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const SALES_API = "/sales";
   const PRODUCT_API = "/products";
 
-  /** Fetch sales and products */
+  function initialFormState() {
+    return {
+      id: null,
+      items: [{ productId: "", quantity: 1, unitPrice: 0, total: 0 }],
+      saleDate: "",
+      marketName: "",
+      customerName: "",
+      customerPhone: "",
+      note: "",
+    };
+  }
+
+  /** Fetch sales + products */
   const fetchData = async () => {
     setLoadingData(true);
     try {
@@ -425,7 +42,7 @@ export default function SalesPage() {
       setSales(resSales.data || []);
       setProducts(resProducts.data || []);
     } catch (err) {
-      console.error("Error fetching data:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "❌ Error fetching data");
     } finally {
       setLoadingData(false);
     }
@@ -435,304 +52,310 @@ export default function SalesPage() {
     fetchData();
   }, []);
 
-  /** Handle form input change & calculate totalAmount */
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => {
-      const updated = { ...prev, [name]: value };
-      const qty = parseFloat(updated.quantity) || 0;
-      const price = parseFloat(updated.unitPrice) || 0;
-      updated.totalAmount = qty * price;
-      return updated;
-    });
+  /** Handle product row change */
+  const handleItemChange = (index, field, value) => {
+    const updatedItems = [...form.items];
+    updatedItems[index][field] = value;
+
+    if (field === "quantity" || field === "unitPrice") {
+      const qty = parseFloat(updatedItems[index].quantity) || 0;
+      const price = parseFloat(updatedItems[index].unitPrice) || 0;
+      updatedItems[index].total = qty * price;
+    }
+    setForm((prev) => ({ ...prev, items: updatedItems }));
+  };
+
+  const addItemRow = () => {
+    setForm((prev) => ({
+      ...prev,
+      items: [...prev.items, { productId: "", quantity: 1, unitPrice: 0, total: 0 }],
+    }));
+  };
+
+  const removeItemRow = (index) => {
+    const updatedItems = form.items.filter((_, i) => i !== index);
+    setForm((prev) => ({ ...prev, items: updatedItems }));
   };
 
   /** Validate form */
   const validateForm = () => {
     const newErrors = {};
-    if (!form.productId) newErrors.productId = "Product is required.";
     if (!form.saleDate) newErrors.saleDate = "Sale date is required.";
-    if (!form.marketName) newErrors.marketName = "Market name is required.";
-    if (!form.quantity) newErrors.quantity = "Quantity is required.";
-    if (!form.unitPrice) newErrors.unitPrice = "Unit price is required.";
     if (!form.customerName) newErrors.customerName = "Customer name is required.";
     if (!form.customerPhone) newErrors.customerPhone = "Customer phone is required.";
+    if (form.items.length === 0) newErrors.items = "At least one product required.";
+    form.items.forEach((it, i) => {
+      if (!it.productId) newErrors[`product_${i}`] = "Product required.";
+      if (!it.quantity) newErrors[`quantity_${i}`] = "Quantity required.";
+      if (!it.unitPrice) newErrors[`price_${i}`] = "Unit price required.";
+    });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  /** Create Sale */
-  const handleCreate = async (e) => {
+  /** Create / Update */
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
     try {
-      await api.post(SALES_API, {
-        productId: form.productId,
-        saleDate: form.saleDate,
-        marketName: form.marketName,
-        quantity: parseFloat(form.quantity),
-        unitPrice: parseFloat(form.unitPrice),
-        totalAmount: form.totalAmount,
-        customerName: form.customerName,
-        customerPhone: form.customerPhone,
-      });
-      fetchData();
-      resetForm();
-    } catch (err) {
-      console.error("Error creating sale:", err.response?.data || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const payload = { 
+        ...form, 
+        totalAmount: form.items.reduce((sum, it) => sum + it.total, 0) 
+      };
 
-  /** Update Sale */
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setLoading(true);
-    try {
-      await api.put(`${SALES_API}/${form.id}`, {
-        productId: form.productId,
-        saleDate: form.saleDate,
-        marketName: form.marketName,
-        quantity: parseFloat(form.quantity),
-        unitPrice: parseFloat(form.unitPrice),
-        totalAmount: form.totalAmount,
-        customerName: form.customerName,
-        customerPhone: form.customerPhone,
-      });
+      if (isEditing) {
+        await api.put(`${SALES_API}/${form.id}`, payload);
+        toast.success("✏️ Sale updated");
+      } else {
+        await api.post(SALES_API, payload);
+        toast.success(" Sale added");
+      }
       fetchData();
       resetForm();
       setIsEditing(false);
     } catch (err) {
-      console.error("Error updating sale:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || " Error saving sale");
     } finally {
       setLoading(false);
     }
   };
 
-  /** Delete Sale */
+  /** Delete */
   const handleDelete = async (id) => {
+    if (!window.confirm("⚠️ Delete this sale?")) return;
     try {
       await api.delete(`${SALES_API}/${id}`);
       fetchData();
+      toast.success(" Sale deleted");
     } catch (err) {
-      console.error("Error deleting sale:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || " Error deleting sale");
     }
   };
 
-  /** Edit Sale */
-  const handleEdit = (sale) => {
+  /** Edit */
+  const handleEdit = (s) => {
     setForm({
-      id: sale._id,
-      productId: sale.productId?._id || sale.productId,
-      saleDate: sale.saleDate.split("T")[0],
-      marketName: sale.marketName,
-      quantity: sale.quantity,
-      unitPrice: sale.unitPrice,
-      totalAmount: sale.totalAmount,
-      customerName: sale.customerName,
-      customerPhone: sale.customerPhone,
+      id: s._id,
+      items: s.items.map((it) => ({
+        productId: it.productId?._id || it.productId,
+        quantity: it.quantity,
+        unitPrice: it.unitPrice,
+        total: it.total,
+      })),
+      saleDate: s.saleDate.split("T")[0],
+      marketName: s.marketName,
+      customerName: s.customerName,
+      customerPhone: s.customerPhone,
+      note: s.note,
     });
     setIsEditing(true);
   };
 
-  /** Reset Form */
+  /** Reset */
   const resetForm = () => {
-    setForm({
-      id: null,
-      productId: "",
-      saleDate: "",
-      marketName: "",
-      quantity: "",
-      unitPrice: "",
-      totalAmount: 0,
-      customerName: "",
-      customerPhone: "",
-    });
+    setForm(initialFormState());
     setErrors({});
   };
 
+  /** Download invoice */
+  const handleDownloadPDF = (saleId) => {
+    window.open(`http://localhost:5000/api/sales/${saleId}/invoice`, "_blank");
+  };
+
+  /** Filtered sales */
+  const filteredSales = sales.filter(
+    (s) =>
+      s.customerName.toLowerCase().includes(search.toLowerCase()) ||
+      s.items.some((it) =>
+        it.productId?.name?.toLowerCase().includes(search.toLowerCase())
+      )
+  );
+
   return (
-    <div className="p-8 bg-gray-50">
-      <h1 className="text-3xl font-semibold mb-6 text-gray-900">Sales Management</h1>
+    <div className="p-8 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="mb-10 flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-bold text-indigo-600 flex items-center gap-2">
+             Sales Management
+          </h1>
+          <p className="text-gray-600 mt-2">Track and manage all sales records.</p>
+        </div>
+        <input
+          type="text"
+          placeholder="Search by customer or product..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="p-2 border rounded-lg w-64 focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
 
-      {loadingData ? (
-        <div className="text-center text-gray-500 py-6">Loading data...</div>
-      ) : (
-        <>
-          {/* Form */}
-          <form
-            onSubmit={isEditing ? handleUpdate : handleCreate}
-            className="bg-white p-6 shadow-lg rounded-lg mb-8"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Product */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Product</label>
-                <select
-                  name="productId"
-                  value={form.productId}
-                  onChange={handleChange}
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-                >
-                  <option value="">Select Product</option>
-                  {products.map((prod) => (
-                    <option key={prod._id} value={prod._id}>{prod.name}</option>
-                  ))}
-                </select>
-                {errors.productId && <span className="text-sm text-red-500">{errors.productId}</span>}
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Form Card */}
+        <div className="lg:col-span-1 bg-white p-6 shadow-xl rounded-2xl">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            {isEditing ? "✏️ Edit Sale" : " Add Sale"}
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Customer Info */}
+            <input name="customerName" value={form.customerName} onChange={(e)=>setForm({...form,customerName:e.target.value})} placeholder="Customer Name" className="w-full p-3 border rounded-lg"/>
+            <input name="customerPhone" value={form.customerPhone} onChange={(e)=>setForm({...form,customerPhone:e.target.value})} placeholder="Customer Phone" className="w-full p-3 border rounded-lg"/>
+            <input type="date" name="saleDate" value={form.saleDate} onChange={(e)=>setForm({...form,saleDate:e.target.value})} className="w-full p-3 border rounded-lg"/>
+            <input name="marketName" value={form.marketName} onChange={(e)=>setForm({...form,marketName:e.target.value})} placeholder="Market Name" className="w-full p-3 border rounded-lg"/>
+            <textarea name="note" value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} placeholder="Note" className="w-full p-3 border rounded-lg"/>
 
-              {/* Sale Date */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Sale Date</label>
-                <input
-                  type="date"
-                  name="saleDate"
-                  value={form.saleDate}
-                  onChange={handleChange}
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-                />
-                {errors.saleDate && <span className="text-sm text-red-500">{errors.saleDate}</span>}
-              </div>
+            {/* Product Rows */}
+            <h3 className="font-semibold text-gray-700 mb-2">Products</h3>
 
-              {/* Market Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Market Name</label>
-                <input
-                  type="text"
-                  name="marketName"
-                  value={form.marketName}
-                  onChange={handleChange}
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-                  placeholder="Enter market name"
-                />
-                {errors.marketName && <span className="text-sm text-red-500">{errors.marketName}</span>}
-              </div>
+{form.items.map((item, i) => (
+  <div
+    key={i}
+    className="border p-4 rounded-lg mb-4 bg-gray-50 shadow-sm"
+  >
+    {/* Product Select */}
+    <label className="block text-sm font-medium text-gray-600 mb-1">Product</label>
+    <select
+      value={item.productId}
+      onChange={(e) => handleItemChange(i, "productId", e.target.value)}
+      className="w-full p-2 border rounded mb-3"
+    >
+      <option value="">Select Product</option>
+      {products.map((p) => (
+        <option key={p._id} value={p._id}>
+          {p.name}
+        </option>
+      ))}
+    </select>
 
-              {/* Quantity */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Quantity</label>
-                <input
-                  type="number"
-                  name="quantity"
-                  value={form.quantity}
-                  onChange={handleChange}
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-                  placeholder="Enter quantity"
-                />
-                {errors.quantity && <span className="text-sm text-red-500">{errors.quantity}</span>}
-              </div>
+    {/* Quantity */}
+    <label className="block text-sm font-medium text-gray-600 mb-1">Quantity</label>
+    <input
+      type="number"
+      value={item.quantity}
+      onChange={(e) => handleItemChange(i, "quantity", e.target.value)}
+      placeholder="Qty"
+      className="w-full p-2 border rounded mb-3"
+    />
 
-              {/* Unit Price */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Unit Price</label>
-                <input
-                  type="number"
-                  name="unitPrice"
-                  value={form.unitPrice}
-                  onChange={handleChange}
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-                  placeholder="Enter unit price"
-                />
-                {errors.unitPrice && <span className="text-sm text-red-500">{errors.unitPrice}</span>}
-              </div>
+    {/* Unit Price */}
+    <label className="block text-sm font-medium text-gray-600 mb-1">Unit Price</label>
+    <input
+      type="number"
+      value={item.unitPrice}
+      onChange={(e) => handleItemChange(i, "unitPrice", e.target.value)}
+      placeholder="Price"
+      className="w-full p-2 border rounded mb-3"
+    />
 
-              {/* Total Amount */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Total Amount</label>
-                <input
-                  type="number"
-                  name="totalAmount"
-                  value={form.totalAmount}
-                  readOnly
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full bg-gray-100"
-                />
-              </div>
+    {/* Total */}
+    <label className="block text-sm font-medium text-gray-600 mb-1">Total</label>
+    <input
+      type="number"
+      value={item.total}
+      readOnly
+      className="w-full p-2 border rounded bg-gray-100 mb-3"
+    />
 
-              {/* Customer Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Customer Name</label>
-                <input
-                  type="text"
-                  name="customerName"
-                  value={form.customerName}
-                  onChange={handleChange}
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-                  placeholder="Enter customer name"
-                />
-                {errors.customerName && <span className="text-sm text-red-500">{errors.customerName}</span>}
-              </div>
+    {/* Remove Button */}
+    {i > 0 && (
+      <button
+        type="button"
+        onClick={() => removeItemRow(i)}
+        className="w-full flex items-center justify-center gap-2 py-2  text-red-600 "
+      >
+        <Trash2 size={16} /> Remove Product
+      </button>
+    )}
+  </div>
+))}
 
-              {/* Customer Phone */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Customer Phone</label>
-                <input
-                  type="text"
-                  name="customerPhone"
-                  value={form.customerPhone}
-                  onChange={handleChange}
-                  className="mt-2 p-3 border border-gray-300 rounded-lg w-full"
-                  placeholder="Enter customer phone"
-                />
-                {errors.customerPhone && <span className="text-sm text-red-500">{errors.customerPhone}</span>}
-              </div>
-            </div>
+{/* Add Product Button */}
+<div className="mt-3">
+  <button
+    type="button"
+    onClick={addItemRow}
+    className="flex items-center gap-2 px-3 py-2 border border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition"
+  >
+    <PlusCircle size={18} /> Add Product
+  </button>
+</div>
 
-            <Button type="submit" className="mt-6 w-full" disabled={loading}>
-              {loading ? "Processing..." : isEditing ? "Update Sale" : "Add Sale"}
-            </Button>
+{/* Grand Total */}
+<div className="font-bold text-right text-lg mt-4">
+  Grand Total: {form.items.reduce((sum, it) => sum + (it.total || 0), 0)}
+</div>
+
+<Button type="submit" className="w-full mt-4" loading={loading}>
+  {isEditing ? "Update Sale" : "Add Sale"}
+</Button>
+
+
           </form>
+        </div>
 
-          {/* Table */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <table className="min-w-full table-auto">
-              <thead className="bg-gray-100">
+        {/* Table Card */}
+        <div className="lg:col-span-2 bg-white p-6 shadow-xl rounded-2xl">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4"> Sales List</h2>
+          <div className="overflow-x-auto max-h-[600px]">
+            <table className="min-w-full border border-gray-200 rounded-lg">
+              <thead className="bg-indigo-50 sticky top-0">
                 <tr>
-                  <th className="py-3 px-4">Product</th>
-                  <th className="py-3 px-4">Market</th>
-                  <th className="py-3 px-4">Qty</th>
-                  <th className="py-3 px-4">Unit Price</th>
-                  <th className="py-3 px-4">Total</th>
+                  <th className="py-3 px-4">Products</th>
                   <th className="py-3 px-4">Customer</th>
+                  <th className="py-3 px-4">Total</th>
                   <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4">Actions</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {sales.map((sale) => (
-                  <tr key={sale._id} className="border-t hover:bg-gray-50">
-                    <td className="py-3 px-4">{sale.productId?.name || "—"}</td>
-                    <td className="py-3 px-4">{sale.marketName}</td>
-                    <td className="py-3 px-4">{sale.quantity}</td>
-                    <td className="py-3 px-4">{sale.unitPrice}</td>
-                    <td className="py-3 px-4">{sale.totalAmount}</td>
-                    <td className="py-3 px-4">{sale.customerName} ({sale.customerPhone})</td>
-                    <td className="py-3 px-4">{new Date(sale.saleDate).toLocaleDateString()}</td>
-                    <td className="py-3 px-4 flex gap-4">
-                      <button onClick={() => handleEdit(sale)} className="text-blue-600 hover:text-blue-800">
-                        <Pencil size={20} />
-                      </button>
-                      <button onClick={() => handleDelete(sale._id)} className="text-red-600 hover:text-red-800">
-                        <Trash2 size={20} />
-                      </button>
+                {filteredSales.map((s, idx) => (
+                  <tr key={s._id} className={idx%2===0?"bg-white":"bg-gray-50"}>
+                    <td className="py-3 px-4">
+                      {s.items.map((it)=> `${it.productId?.name||"—"} (${it.quantity})`).join(", ")}
+                    </td>
+                    <td className="py-3 px-4">{s.customerName} ({s.customerPhone})</td>
+                    <td className="py-3 px-4 text-center">{s.totalAmount}</td>
+                    <td className="py-3 px-4">{new Date(s.saleDate).toLocaleDateString()}</td>
+                    <td className="py-3 px-4 flex justify-center gap-4">
+                      <button onClick={() => setViewSale(s)} className="text-green-600"><Eye size={20}/></button>
+                      <button onClick={() => handleEdit(s)} className="text-blue-600"><Pencil size={20}/></button>
+                      <button onClick={() => handleDelete(s._id)} className="text-red-600"><Trash2 size={20}/></button>
+                      <button onClick={() => handleDownloadPDF(s._id)} className="text-indigo-600"><Download size={20}/></button>
                     </td>
                   </tr>
                 ))}
-                {sales.length === 0 && (
-                  <tr>
-                    <td colSpan="8" className="text-center py-4 text-gray-500">No sales available.</td>
-                  </tr>
+                {filteredSales.length === 0 && (
+                  <tr><td colSpan="5" className="text-center py-6 text-gray-500">No sales found.</td></tr>
                 )}
               </tbody>
             </table>
           </div>
-        </>
+        </div>
+      </div>
+
+      {/* 👁️ View Sale Modal */}
+      {viewSale && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-start z-50 mt-20 pointer-events-none">
+          <div className="bg-white rounded-xl shadow-2xl w-[400px] p-6 border pointer-events-auto">
+            <h3 className="text-xl font-bold mb-4 text-indigo-600">Sale Details</h3>
+            <p><strong>Customer:</strong> {viewSale.customerName} ({viewSale.customerPhone})</p>
+            <p><strong>Market:</strong> {viewSale.marketName || "—"}</p>
+            <p><strong>Date:</strong> {new Date(viewSale.saleDate).toLocaleDateString()}</p>
+            <h4 className="font-semibold mt-3">Products:</h4>
+            <ul className="list-disc ml-5">
+              {viewSale.items.map((it,i)=>(
+                <li key={i}>{it.productId?.name || "—"} — {it.quantity} × {it.unitPrice} = {it.total}</li>
+              ))}
+            </ul>
+            <p className="mt-2 font-bold">Total: {viewSale.totalAmount}</p>
+
+            <Button onClick={() => setViewSale(null)} className="mt-4 w-full bg-indigo-600 text-white">
+              Close
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );
 }
-
-

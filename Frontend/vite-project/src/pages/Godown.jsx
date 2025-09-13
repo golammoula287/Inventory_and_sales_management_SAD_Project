@@ -147,7 +147,18 @@ export default function GodownPage() {
 
   return (
     <div className="p-8 bg-gray-50">
-      <h1 className="text-3xl font-semibold mb-6 text-gray-900">Godown Management</h1>
+      
+
+      <div className="mb-10 flex justify-between items-center">
+  <div>
+    <h1 className="text-4xl font-bold text-blue-600 flex items-center gap-2">
+      Godown Management
+    </h1>
+    <p className="text-gray-600 mt-2">Track and manage all Godown records.</p>
+  </div>
+  
+</div>
+
 
       {loadingData ? (
         <div className="text-center text-gray-500 py-6">Loading data...</div>

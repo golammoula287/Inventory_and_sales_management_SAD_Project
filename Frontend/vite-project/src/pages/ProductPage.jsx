@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Pencil, Trash2, PlusCircle, Eye } from "lucide-react";
+import { Pencil, Trash2, PlusCircle, Eye, GroupIcon } from "lucide-react";
 import Button from "../components/Button";
 import api from "../services/apiClient.js";
 import toast from "react-hot-toast";
@@ -19,7 +19,7 @@ export default function ProductPage() {
     image: "",
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [viewProduct, setViewProduct] = useState(null); // 👁️ View product state
+  const [viewProduct, setViewProduct] = useState(null); 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +37,7 @@ export default function ProductPage() {
       setProducts(resProducts.data || []);
       setCategories(resCategories.data || []);
     } catch (err) {
-      toast.error(err.response?.data?.message || "❌ Error fetching data");
+      toast.error(err.response?.data?.message || " Error fetching data");
     } finally {
       setLoadingData(false);
     }
@@ -71,9 +71,9 @@ export default function ProductPage() {
       await api.post(PRODUCT_API, form);
       fetchData();
       resetForm();
-      toast.success("✅ Product added successfully");
+      toast.success(" Product added successfully");
     } catch (err) {
-      toast.error(err.response?.data?.message || "❌ Error creating product");
+      toast.error(err.response?.data?.message || " Error creating product");
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,7 @@ export default function ProductPage() {
       setIsEditing(false);
       toast.success("✏️ Product updated successfully");
     } catch (err) {
-      toast.error(err.response?.data?.message || "❌ Error updating product");
+      toast.error(err.response?.data?.message || " Error updating product");
     } finally {
       setLoading(false);
     }
@@ -105,7 +105,7 @@ export default function ProductPage() {
       fetchData();
       toast.success("🗑️ Product deleted");
     } catch (err) {
-      toast.error(err.response?.data?.message || "❌ Error deleting product");
+      toast.error(err.response?.data?.message || " Error deleting product");
     }
   };
 
@@ -150,13 +150,13 @@ export default function ProductPage() {
       <div className="mb-10 flex justify-between items-center">
         <div>
           <h1 className="text-4xl font-bold text-indigo-600 flex items-center gap-2">
-            <PlusCircle size={36} /> Product Management
+             Product Management
           </h1>
           <p className="text-gray-600 mt-2">
             Manage all products and categories in one place.
           </p>
         </div>
-        {/* 🔍 Search Bar */}
+        {/*  Search Bar */}
         <input
           type="text"
           placeholder="Search by name or SKU..."
@@ -173,7 +173,7 @@ export default function ProductPage() {
           {/* Form Card */}
           <div className="lg:col-span-1 bg-white p-6 shadow-xl rounded-2xl">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              {isEditing ? "✏️ Edit Product" : "➕ Add Product"}
+              {isEditing ? "✏️ Edit Product" : " Add Product"}
             </h2>
             <form onSubmit={isEditing ? handleUpdate : handleCreate} className="space-y-4">
               <input
@@ -244,7 +244,7 @@ export default function ProductPage() {
 
           {/* Table Card */}
           <div className="lg:col-span-2 bg-white p-6 shadow-xl rounded-2xl">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">📦 Products List</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4"> Products List</h2>
             <div className="overflow-x-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
               <table className="min-w-full border border-gray-200 rounded-lg">
                 <thead className="bg-indigo-50 sticky top-0">
@@ -312,7 +312,7 @@ export default function ProductPage() {
         </div>
       )}
 
-      {/* 👁️ Inline View Product Modal */}
+      {/* Inline View Product Modal */}
 {viewProduct && (
   <div className="fixed top-0 left-0 w-full h-full flex justify-center items-start z-50 mt-20 pointer-events-none">
     <div className="bg-white rounded-xl shadow-2xl w-[400px] p-6 border border-gray-200 pointer-events-auto">
