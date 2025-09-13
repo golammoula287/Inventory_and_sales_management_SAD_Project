@@ -148,53 +148,44 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Legend,
-} from "recharts";
-import {
-  Package,
-  ShoppingCart,
-  DollarSign,
-  TrendingUp,
-  ArrowUpCircle,
-  ArrowDownCircle,
-} from "lucide-react";
+import { BarChart, Bar, Tooltip, ResponsiveContainer, XAxis, YAxis, Legend } from "recharts";
+import { Package, ShoppingCart, DollarSign, TrendingUp, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const [kpis, setKpis] = useState(null);
+  const [kpis, setKpis] = useState(null); // To store KPIs (Products, Sales, Expenses, etc.)
+  const [monthlyData, setMonthlyData] = useState({ salesData: [], expenseData: [], profitLossData: [] });
   const [recentPurchases, setRecentPurchases] = useState([]);
   const [recentSales, setRecentSales] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
+  // Fetch dashboard data (KPIs and Monthly Data)
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
+        // Fetch KPIs (Products, Sales, Expenses, etc.)
         const res = await fetch("http://localhost:5000/api/dashboard");
         if (!res.ok) throw new Error("Failed to fetch dashboard data");
         const data = await res.json();
         setKpis(data);
 
-        // also fetch recent purchases and sales
+        // Fetch recent purchases and sales
         const [purchasesRes, salesRes] = await Promise.all([
           fetch("http://localhost:5000/api/purchases?limit=5"),
           fetch("http://localhost:5000/api/sales?limit=5"),
         ]);
         setRecentPurchases(await purchasesRes.json());
         setRecentSales(await salesRes.json());
+
+        // Fetch monthly sales and expense data
+        const monthlyRes = await fetch("http://localhost:5000/api/monthly-data");
+        if (!monthlyRes.ok) throw new Error("Failed to fetch monthly data");
+        const monthlyData = await monthlyRes.json();
+        setMonthlyData(monthlyData);
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -211,12 +202,10 @@ export default function Dashboard() {
     );
   }
 
-  // Dummy Profit/Loss trend data (replace with API data)
-  const profitLossTrend = [
-    { month: "Jan", Profit: 1200, Loss: 200 },
-    { month: "Feb", Profit: 800, Loss: 400 },
-    { month: "Mar", Profit: 1500, Loss: 500 },
-    { month: "Apr", Profit: 1000, Loss: 300 },
+  // Create monthly labels (Jan, Feb, Mar, ..., Dec)
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
   return (
@@ -227,9 +216,7 @@ export default function Dashboard() {
             <h1 className="text-4xl font-bold text-blue-600 flex items-center gap-2">
               Dashboard
             </h1>
-            <p className="text-gray-600 mt-2">
-              Track and manage all records.
-            </p>
+            <p className="text-gray-600 mt-2">Track and manage all records.</p>
           </div>
         </div>
 
@@ -294,45 +281,25 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <div className="bg-white rounded-xl shadow p-6 lg:col-span-2">
-            <h2 className="text-lg font-semibold mb-4">Profit & Loss Trend</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={profitLossTrend}>
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="Profit" fill="#4CAF50" />
-                <Bar dataKey="Loss" fill="#F44336" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Sales by Product</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={[
-                    { name: "Rice", value: 40000 },
-                    { name: "Onion", value: 25000 },
-                  ]}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                  label
-                >
-                  {colors.map((color, i) => (
-                    <Cell key={i} fill={color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+        {/* Profit & Loss Trend Chart */}
+        <div className="bg-white rounded-xl shadow p-6 lg:col-span-2">
+          <h2 className="text-lg font-semibold mb-4">Profit & Loss Trend</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={months.map((month, index) => ({
+              month,
+              sales: monthlyData.salesData[index] || 0,
+              expenses: monthlyData.expenseData[index] || 0,
+              profitLoss: monthlyData.profitLossData[index] || 0,
+            }))}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="sales" fill="#4CAF50" name="Sales" />
+              <Bar dataKey="expenses" fill="#F44336" name="Expenses" />
+              <Bar dataKey="profitLoss" fill="#FFC107" name="Profit/Loss" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Recent Purchases & Sales */}

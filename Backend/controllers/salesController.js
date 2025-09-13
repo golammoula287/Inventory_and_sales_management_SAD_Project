@@ -416,7 +416,7 @@ export const downloadInvoice = async (req, res) => {
 
     // Header
     doc.fontSize(26).fillColor("#001a9dff").text("Munna", { continued: true });
-    doc.fillColor("#ffcf66ff").text(" Enterprise");
+    doc.fillColor("#ffcf66ff").text("Traders");
 
     doc.moveDown();
     doc.fontSize(14).fillColor("black").text("Invoice");
