@@ -141,7 +141,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen">
       {/* Left Section with Card */}
-      <div className="flex w-1/2 items-center justify-center p-8 bg-green-200">
+      <div className="flex w-1/2 items-center justify-center p-8 bg-blue-200">
         <div className="w-full max-w-md bg-gray-50 rounded-2xl shadow-xl p-8 space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-blue-500">Access your account to continue</h1>
