@@ -1,0 +1,68 @@
+[{
+  "_id": {
+    "$oid": "68a8bc5e999e1d09b42f0b2b"
+  },
+  "name": "Tupan Vai",
+  "contact": "01610175349",
+  "ratings": 5,
+  "notes": "Top Suppliers",
+  "paymentTerms": "Hand Cash",
+  "createdAt": {
+    "$date": "2025-08-22T18:52:14.806Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-22T18:52:14.806Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5b6ec1a1395eb7a49525d"
+  },
+  "name": "Fahad Vai",
+  "contact": "015221263355",
+  "ratings": 5,
+  "notes": "sdfdssda",
+  "paymentTerms": "Cash",
+  "createdAt": {
+    "$date": "2025-09-13T18:24:44.318Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-13T18:24:44.318Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8852283ef4621b2a06df2"
+  },
+  "name": "Golam Moula",
+  "contact": "01610175349",
+  "ratings": 5,
+  "notes": "",
+  "paymentTerms": "Bank",
+  "createdAt": {
+    "$date": "2025-09-15T21:29:06.190Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:30:01.114Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8854783ef4621b2a06df5"
+  },
+  "name": "Maruf",
+  "contact": "015221263355",
+  "ratings": 5,
+  "notes": "",
+  "paymentTerms": "Bank",
+  "createdAt": {
+    "$date": "2025-09-15T21:29:43.186Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:29:43.186Z"
+  },
+  "__v": 0
+}]

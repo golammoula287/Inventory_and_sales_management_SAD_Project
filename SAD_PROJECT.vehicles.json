@@ -1,0 +1,54 @@
+[{
+  "_id": {
+    "$oid": "68c88a2283ef4621b2a07034"
+  },
+  "vehicleNumber": "Dhaka-Metro-A-1206",
+  "ownerName": "Gazi Vai",
+  "capacityTon": 2,
+  "ownerPhone": "0161115151515",
+  "status": "available",
+  "notes": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T21:50:26.365Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:50:26.365Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c88a4583ef4621b2a07037"
+  },
+  "vehicleNumber": "Dhaka-Metro-A-1208",
+  "ownerName": "Montu Mia ",
+  "capacityTon": 8,
+  "ownerPhone": "0161115151514",
+  "status": "available",
+  "notes": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T21:51:01.502Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:03:43.636Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c88e2d93d0a85ce12d6d88"
+  },
+  "vehicleNumber": "Dhaka-Metro-A-1205",
+  "ownerName": "Maruf",
+  "capacityTon": 6,
+  "ownerPhone": "016111515151",
+  "status": "available",
+  "notes": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T22:07:41.883Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:07:41.883Z"
+  },
+  "__v": 0
+}]

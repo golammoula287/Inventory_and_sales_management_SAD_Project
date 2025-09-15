@@ -7,7 +7,7 @@ export default function Button({ children, type = 'button', onClick, disabled, l
       onClick={onClick}
       disabled={disabled || loading}
       className={`w-full py-3 px-6 rounded-lg text-white font-medium disabled:opacity-60 transition-all ease-in-out duration-300 transform 
-        ${loading ? 'bg-gray-500' : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 hover:from-purple-700 hover:to-blue-800'} focus:outline-none`}
+        ${loading ? 'bg-gray-500' : 'px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'} focus:outline-none`}
     >
       {loading ? (
         <div className="flex justify-center items-center space-x-2">

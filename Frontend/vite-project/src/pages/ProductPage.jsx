@@ -149,7 +149,7 @@ export default function ProductPage() {
       {/* Header */}
       <div className="mb-10 flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold text-indigo-600 flex items-center gap-2">
+          <h1 className="text-4xl font-bold text-blue-600 flex items-center gap-2">
              Product Management
           </h1>
           <p className="text-gray-600 mt-2">
@@ -247,66 +247,59 @@ export default function ProductPage() {
             <h2 className="text-xl font-semibold text-gray-800 mb-4"> Products List</h2>
             <div className="overflow-x-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
               <table className="min-w-full border border-gray-200 rounded-lg">
-                <thead className="bg-indigo-50 sticky top-0">
-                  <tr>
-                    <th className="py-3 px-4 text-left">Name</th>
-                    <th className="py-3 px-4 text-left">Category</th>
-                    <th className="py-3 px-4">Unit</th>
-                    <th className="py-3 px-4">SKU</th>
-                    <th className="py-3 px-4">Description</th>
-                    <th className="py-3 px-4">Image</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
+              <thead className="bg-indigo-50 sticky top-0">
+                <tr>
+                  <th className="py-3 px-4 text-left">Name</th>
+                  <th className="py-3 px-4 text-left">Category</th>
+                  <th className="py-3 px-4">Unit</th>
+                  <th className="py-3 px-4">SKU</th>
+                  <th className="py-3 px-4">Description</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProducts.map((p, idx) => (
+                  <tr
+                    key={p._id}
+                    className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-indigo-50`}
+                  >
+                    <td className="py-3 px-4">{p.name}</td>
+                    <td className="py-3 px-4">{p.category?.name || "—"}</td>
+                    <td className="py-3 px-4 text-center">{p.unitType}</td>
+                    <td className="py-3 px-4 text-center">{p.sku}</td>
+                    <td className="py-3 px-4">{p.description}</td>
+                    <td className="py-3 px-4 flex justify-center gap-4">
+                      <button
+                        onClick={() => setViewProduct(p)}
+                        className="text-green-600 hover:text-green-800"
+                      >
+                        <Eye size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleEdit(p)}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Pencil size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(p._id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.map((p, idx) => (
-                    <tr
-                      key={p._id}
-                      className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-indigo-50`}
-                    >
-                      <td className="py-3 px-4">{p.name}</td>
-                      <td className="py-3 px-4">{p.category?.name || "—"}</td>
-                      <td className="py-3 px-4 text-center">{p.unitType}</td>
-                      <td className="py-3 px-4 text-center">{p.sku}</td>
-                      <td className="py-3 px-4">{p.description}</td>
-                      <td className="py-3 px-4 text-center">
-                        {p.image ? (
-                          <img src={p.image} alt={p.name} className="w-12 h-12 object-cover rounded" />
-                        ) : (
-                          "—"
-                        )}
-                      </td>
-                      <td className="py-3 px-4 flex justify-center gap-4">
-                        <button
-                          onClick={() => setViewProduct(p)}
-                          className="text-green-600 hover:text-green-800"
-                        >
-                          <Eye size={20} />
-                        </button>
-                        <button
-                          onClick={() => handleEdit(p)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          <Pencil size={20} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(p._id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 size={20} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {filteredProducts.length === 0 && (
-                    <tr>
-                      <td colSpan="7" className="text-center py-6 text-gray-500">
-                        No products found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                ))}
+                {filteredProducts.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="text-center py-6 text-gray-500">
+                      No products found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+
             </div>
           </div>
         </div>

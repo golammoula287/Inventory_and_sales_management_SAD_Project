@@ -54,7 +54,7 @@ export const addSale = async (req, res) => {
           totalPurchaseCost += allocate * purchase.unitPrice;
 
           // Update godown available space immediately
-          await Godown.findByIdAndUpdate(godownId, { $inc: { availableSpace: -allocate } });
+          await Godown.findByIdAndUpdate(godownId, { $inc: { availableSpace: allocate } });
 
           allocatedGodownId = godownObjectId;
           remainingQty -= allocate;

@@ -1,0 +1,449 @@
+[{
+  "_id": {
+    "$oid": "68c88f4193d0a85ce12d6df3"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c35b56decd86017b97175f"
+      },
+      "quantity": 100,
+      "unitPrice": 60,
+      "total": 6000,
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "_id": {
+        "$oid": "68c88f4193d0a85ce12d6df4"
+      }
+    }
+  ],
+  "customerName": "Karim Bhai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-01-30T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "N/A",
+  "totalAmount": 6000,
+  "profitLoss": 1000,
+  "createdAt": {
+    "$date": "2025-09-15T22:12:17.352Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:12:17.352Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c88f8c93d0a85ce12d6e04"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c35b56decd86017b97175f"
+      },
+      "quantity": 100,
+      "unitPrice": 68,
+      "total": 6800,
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "_id": {
+        "$oid": "68c88f8c93d0a85ce12d6e05"
+      }
+    },
+    {
+      "productId": {
+        "$oid": "68c5b6ab1a1395eb7a495257"
+      },
+      "quantity": 1000,
+      "unitPrice": 449,
+      "total": 449000,
+      "godownId": {
+        "$oid": "68c889e583ef4621b2a0702f"
+      },
+      "_id": {
+        "$oid": "68c88f8c93d0a85ce12d6e06"
+      }
+    }
+  ],
+  "customerName": "Nasir Uddin ",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-02-11T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "N/A",
+  "totalAmount": 455800,
+  "profitLoss": 200800,
+  "createdAt": {
+    "$date": "2025-09-15T22:13:32.819Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:13:32.819Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8903c93d0a85ce12d6e58"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c4bff9bcd88e5a4403ab58"
+      },
+      "quantity": 500,
+      "unitPrice": 60,
+      "total": 30000,
+      "godownId": {
+        "$oid": "68c889a683ef4621b2a0702c"
+      },
+      "_id": {
+        "$oid": "68c8903c93d0a85ce12d6e59"
+      }
+    },
+    {
+      "productId": {
+        "$oid": "68c35b56decd86017b97175f"
+      },
+      "quantity": 100,
+      "unitPrice": 70,
+      "total": 7000,
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "_id": {
+        "$oid": "68c8903c93d0a85ce12d6e5a"
+      }
+    }
+  ],
+  "customerName": "Karim Bhai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-03-16T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "N/A",
+  "totalAmount": 37000,
+  "profitLoss": 22000,
+  "createdAt": {
+    "$date": "2025-09-15T22:16:28.652Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:16:28.652Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c890de93d0a85ce12d6f4b"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c35b56decd86017b97175f"
+      },
+      "quantity": 100,
+      "unitPrice": 80,
+      "total": 8000,
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "_id": {
+        "$oid": "68c890de93d0a85ce12d6f4c"
+      }
+    },
+    {
+      "productId": {
+        "$oid": "68c5b6ab1a1395eb7a495257"
+      },
+      "quantity": 100,
+      "unitPrice": 460,
+      "total": 46000,
+      "godownId": {
+        "$oid": "68c889e583ef4621b2a0702f"
+      },
+      "_id": {
+        "$oid": "68c890de93d0a85ce12d6f4d"
+      }
+    }
+  ],
+  "customerName": "Nazmul Hud vai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-01-16T00:00:00.000Z"
+  },
+  "marketName": "Poddar Bazar",
+  "note": "N/A",
+  "totalAmount": 54000,
+  "profitLoss": 24000,
+  "createdAt": {
+    "$date": "2025-09-15T22:19:10.005Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:19:10.005Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8919893d0a85ce12d70cb"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c5b6ab1a1395eb7a495257"
+      },
+      "quantity": 8900,
+      "unitPrice": 300,
+      "total": 2670000,
+      "godownId": {
+        "$oid": "68c889e583ef4621b2a0702f"
+      },
+      "_id": {
+        "$oid": "68c8919893d0a85ce12d70cc"
+      }
+    }
+  ],
+  "customerName": "Karim Bhai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-09-20T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "N/A",
+  "totalAmount": 2670000,
+  "profitLoss": 445000,
+  "createdAt": {
+    "$date": "2025-09-15T22:22:16.155Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:22:16.155Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c894ba8754728534382658"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c35b56decd86017b97175f"
+      },
+      "quantity": 100,
+      "unitPrice": 60,
+      "total": 6000,
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "_id": {
+        "$oid": "68c894ba8754728534382659"
+      }
+    }
+  ],
+  "customerName": "Karim ",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-01-30T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "N/A",
+  "totalAmount": 6000,
+  "profitLoss": 1000,
+  "createdAt": {
+    "$date": "2025-09-15T22:35:38.930Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:35:38.930Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8963c8754728534382855"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c35b56decd86017b97175f"
+      },
+      "quantity": 40,
+      "unitPrice": 60,
+      "total": 2400,
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "_id": {
+        "$oid": "68c8963c8754728534382856"
+      }
+    }
+  ],
+  "customerName": "Karim ",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-01-31T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "N/A",
+  "totalAmount": 2400,
+  "profitLoss": 400,
+  "createdAt": {
+    "$date": "2025-09-15T22:42:04.347Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:42:04.347Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c89968164299733d177c42"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c4bff9bcd88e5a4403ab58"
+      },
+      "quantity": 100,
+      "unitPrice": 60,
+      "total": 6000,
+      "godownId": {
+        "$oid": "68c889a683ef4621b2a0702c"
+      },
+      "_id": {
+        "$oid": "68c89968164299733d177c43"
+      }
+    }
+  ],
+  "customerName": "Karim Bhai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-01-31T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "",
+  "totalAmount": 6000,
+  "profitLoss": 4000,
+  "createdAt": {
+    "$date": "2025-09-15T22:55:36.671Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:55:36.671Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c89ef464f15bbda11a065c"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c35b56decd86017b97175f"
+      },
+      "quantity": 460,
+      "unitPrice": 60,
+      "total": 27600,
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "_id": {
+        "$oid": "68c89ef464f15bbda11a065d"
+      }
+    }
+  ],
+  "customerName": "Karim Bhai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-01-31T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "",
+  "totalAmount": 27600,
+  "profitLoss": 4600,
+  "createdAt": {
+    "$date": "2025-09-15T23:19:16.420Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:19:16.420Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c89f4264f15bbda11a0756"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c4bff9bcd88e5a4403ab58"
+      },
+      "quantity": 4400,
+      "unitPrice": 60,
+      "total": 264000,
+      "godownId": {
+        "$oid": "68c889a683ef4621b2a0702c"
+      },
+      "_id": {
+        "$oid": "68c89f4264f15bbda11a0757"
+      }
+    }
+  ],
+  "customerName": "Karim Bhai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-02-16T00:00:00.000Z"
+  },
+  "marketName": "Hari Pur Bazar",
+  "note": "",
+  "totalAmount": 264000,
+  "profitLoss": 176000,
+  "createdAt": {
+    "$date": "2025-09-15T23:20:34.494Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:20:34.494Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8a0f564f15bbda11a0ce6"
+  },
+  "items": [
+    {
+      "productId": {
+        "$oid": "68c8860583ef4621b2a06e18"
+      },
+      "quantity": 500,
+      "unitPrice": 70,
+      "total": 35000,
+      "godownId": {
+        "$oid": "68c89ec264f15bbda11a05cd"
+      },
+      "_id": {
+        "$oid": "68c8a0f564f15bbda11a0ce7"
+      }
+    }
+  ],
+  "customerName": "Karim Bhai",
+  "customerPhone": "01521797715",
+  "saleDate": {
+    "$date": "2025-08-16T00:00:00.000Z"
+  },
+  "marketName": "Karwan Bazar",
+  "note": "",
+  "totalAmount": 35000,
+  "profitLoss": 10000,
+  "createdAt": {
+    "$date": "2025-09-15T23:27:49.385Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:27:49.385Z"
+  },
+  "__v": 0
+}]

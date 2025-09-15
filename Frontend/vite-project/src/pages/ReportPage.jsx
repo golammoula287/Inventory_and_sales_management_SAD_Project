@@ -142,7 +142,7 @@ const ProfitLossReport = () => {
           </Button>
           {reportData && (
             <Button variant="outline" onClick={downloadCSV}>
-              <Download className="w-4 h-4 mr-2" /> Download CSV
+              Download CSV
             </Button>
           )}
         </div>

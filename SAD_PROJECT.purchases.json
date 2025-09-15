@@ -1,0 +1,128 @@
+[{
+  "_id": {
+    "$oid": "68c88e6893d0a85ce12d6db4"
+  },
+  "productId": {
+    "$oid": "68c35b56decd86017b97175f"
+  },
+  "supplierId": {
+    "$oid": "68a8bc5e999e1d09b42f0b2b"
+  },
+  "quantity": 1000,
+  "stock": 1000,
+  "unitPrice": 50,
+  "totalAmount": 50000,
+  "purchaseDate": {
+    "$date": "2025-01-16T00:00:00.000Z"
+  },
+  "godowns": [
+    {
+      "godownId": {
+        "$oid": "68c8896e83ef4621b2a07029"
+      },
+      "allocatedQuantity": 1000,
+      "_id": {
+        "$oid": "68c88e6893d0a85ce12d6db5"
+      }
+    }
+  ],
+  "invoiceUrl": "http://localhost:5173/purchases",
+  "note": "N/A",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c88e9d93d0a85ce12d6dc5"
+  },
+  "productId": {
+    "$oid": "68c4bff9bcd88e5a4403ab58"
+  },
+  "supplierId": {
+    "$oid": "68c5b6ec1a1395eb7a49525d"
+  },
+  "quantity": 5000,
+  "stock": 5000,
+  "unitPrice": 20,
+  "totalAmount": 100000,
+  "purchaseDate": {
+    "$date": "2025-02-03T00:00:00.000Z"
+  },
+  "godowns": [
+    {
+      "godownId": {
+        "$oid": "68c889a683ef4621b2a0702c"
+      },
+      "allocatedQuantity": 5000,
+      "_id": {
+        "$oid": "68c88e9d93d0a85ce12d6dc6"
+      }
+    }
+  ],
+  "invoiceUrl": "",
+  "note": "N/A",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c88eea93d0a85ce12d6dd7"
+  },
+  "productId": {
+    "$oid": "68c5b6ab1a1395eb7a495257"
+  },
+  "supplierId": {
+    "$oid": "68c8854783ef4621b2a06df5"
+  },
+  "quantity": 10000,
+  "stock": 10000,
+  "unitPrice": 250,
+  "totalAmount": 2500000,
+  "purchaseDate": {
+    "$date": "2025-09-14T00:00:00.000Z"
+  },
+  "godowns": [
+    {
+      "godownId": {
+        "$oid": "68c889e583ef4621b2a0702f"
+      },
+      "allocatedQuantity": 10000,
+      "_id": {
+        "$oid": "68c88eea93d0a85ce12d6dd8"
+      }
+    }
+  ],
+  "invoiceUrl": "",
+  "note": "",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c89f9564f15bbda11a086d"
+  },
+  "productId": {
+    "$oid": "68c8860583ef4621b2a06e18"
+  },
+  "supplierId": {
+    "$oid": "68a8bc5e999e1d09b42f0b2b"
+  },
+  "quantity": 4000,
+  "stock": 4000,
+  "unitPrice": 50,
+  "totalAmount": 200000,
+  "purchaseDate": {
+    "$date": "2025-08-15T00:00:00.000Z"
+  },
+  "godowns": [
+    {
+      "godownId": {
+        "$oid": "68c89ec264f15bbda11a05cd"
+      },
+      "allocatedQuantity": 4000,
+      "_id": {
+        "$oid": "68c8a0bc64f15bbda11a0c48"
+      }
+    }
+  ],
+  "invoiceUrl": "http://localhost:5173/purchases",
+  "note": "",
+  "__v": 0
+}]

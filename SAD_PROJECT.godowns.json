@@ -1,0 +1,76 @@
+[{
+  "_id": {
+    "$oid": "68c8896e83ef4621b2a07029"
+  },
+  "godownId": "G-0001",
+  "location": "Bhola ",
+  "capacity": 5000,
+  "availableSpace": 5000,
+  "managerName": "Junaed Shikder",
+  "managerPhone": "016444558899",
+  "notes": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T21:47:26.313Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:19:16.412Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c889a683ef4621b2a0702c"
+  },
+  "godownId": "G-0002",
+  "location": "Kamar Para",
+  "capacity": 10000,
+  "availableSpace": 10000,
+  "managerName": "Maruf",
+  "managerPhone": "016444558898",
+  "notes": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T21:48:22.301Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:20:34.492Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c889e583ef4621b2a0702f"
+  },
+  "godownId": "G-0003",
+  "location": "Thakur Gaon",
+  "capacity": 20000,
+  "availableSpace": 20000,
+  "managerName": "Apel Mia",
+  "managerPhone": "016444558810",
+  "notes": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T21:49:25.230Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T22:22:16.151Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c89ec264f15bbda11a05cd"
+  },
+  "godownId": "G-0004",
+  "location": "Karwan Bazar",
+  "capacity": 6000,
+  "availableSpace": 3500,
+  "managerName": "Apel Mia",
+  "managerPhone": "016444558810",
+  "notes": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T23:18:26.134Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:27:49.382Z"
+  },
+  "__v": 0
+}]

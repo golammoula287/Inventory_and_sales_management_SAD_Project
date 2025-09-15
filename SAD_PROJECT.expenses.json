@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "68c8a09664f15bbda11a0b9e"
+  },
+  "type": "Transportation ",
+  "amount": 5000,
+  "date": {
+    "$date": "2025-08-16T00:00:00.000Z"
+  },
+  "relatedProductId": {
+    "$oid": "68c8860583ef4621b2a06e18"
+  },
+  "note": "",
+  "createdAt": {
+    "$date": "2025-09-15T23:26:14.205Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:29:21.407Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8a11b64f15bbda11a0d46"
+  },
+  "type": "Transportation ",
+  "amount": 1000,
+  "date": {
+    "$date": "2025-01-16T00:00:00.000Z"
+  },
+  "relatedProductId": null,
+  "note": "",
+  "createdAt": {
+    "$date": "2025-09-15T23:28:27.423Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T23:28:27.423Z"
+  },
+  "__v": 0
+}]

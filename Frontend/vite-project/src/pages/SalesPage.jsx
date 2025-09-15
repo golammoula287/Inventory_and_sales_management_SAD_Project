@@ -177,7 +177,7 @@ export default function SalesPage() {
       {/* Header */}
       <div className="mb-10 flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold text-indigo-600 flex items-center gap-2">
+          <h1 className="text-4xl font-bold text-blue-600 flex items-center gap-2">
              Sales Management
           </h1>
           <p className="text-gray-600 mt-2">Track and manage all sales records.</p>

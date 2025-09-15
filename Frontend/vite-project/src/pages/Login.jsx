@@ -92,119 +92,121 @@
 
 
 
-import React, { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import TextInput from '../components/TextInput.jsx'
-import Button from '../components/Button.jsx'
-import { useAuth } from '../context/AuthContext.jsx'
-import toast from 'react-hot-toast'
-import BgImage from '../assets/Bg.jpg'
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import TextInput from "../components/TextInput.jsx";
+import Button from "../components/Button.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+import toast from "react-hot-toast";
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState({})
-  const [submitting, setSubmitting] = useState(false)
-  const [apiError, setApiError] = useState('')
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { login } = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [apiError, setApiError] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
 
   const validate = () => {
-    const e = {}
-    if (!email) e.email = 'Email is required'
-    if (!password) e.password = 'Password is required'
-    return e
-  }
+    const e = {};
+    if (!email) e.email = "Email is required";
+    if (!password) e.password = "Password is required";
+    return e;
+  };
 
   const onSubmit = async (evt) => {
-    evt.preventDefault()
-    setApiError('')
-    const v = validate()
-    setErrors(v)
-    if (Object.keys(v).length) return
+    evt.preventDefault();
+    setApiError("");
+    const v = validate();
+    setErrors(v);
+    if (Object.keys(v).length) return;
 
     try {
-      setSubmitting(true)
-      await login(email, password)
-      const from = location.state?.from?.pathname || '/dashboard'
-      navigate(from, { replace: true })
-      toast.success('Login successful!', { duration: 4000, position: 'top-right' })
+      setSubmitting(true);
+      await login(email, password);
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
+      toast.success("Login successful!", { duration: 4000, position: "top-right" });
     } catch (err) {
-      setApiError(err?.response?.data?.message || 'Login failed. Please check your credentials.')
-      toast.error('Login failed!', { duration: 4000, position: 'top-right' })
+      setApiError(err?.response?.data?.message || "Login failed. Please check your credentials.");
+      toast.error("Login failed!", { duration: 4000, position: "top-right" });
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Section with Card */}
-      <div className="flex w-1/2 items-center justify-center p-8 bg-blue-200">
-        <div className="w-full max-w-md bg-gray-50 rounded-2xl shadow-xl p-8 space-y-6">
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-blue-500">Access your account to continue</h1>
-            
-          </div>
-
-          {apiError && (
-            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
-              {apiError}
-            </div>
-          )}
-
-          <form onSubmit={onSubmit} className="space-y-5">
-            <TextInput
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              error={errors.email}
-              className="w-full p-3 border border-green-200 rounded-lg shadow-sm focus:ring-2 "
-            />
-            <TextInput
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              error={errors.password}
-              className="w-full p-3 border border-green-200 rounded-lg shadow-sm focus:ring-2 focus:ring-green-400"
-            />
-            <Button
-              type="submit"
-              disabled={submitting}
-              className="w-full rounded-lg bg-green-700 hover:bg-green-800 text-white py-2 transition-all transform hover:scale-105"
-            >
-              {submitting ? 'Signing in…' : 'Sign in'}
-            </Button>
-          </form>
-        </div>
+    <div className="relative min-h-screen flex flex-col  items-center justify-center">
+      {/* Top Blue Section */}
+      <div className="absolute top-0 left-0 w-full h-1/1 bg-gray-900">
+        {/* Wave at the bottom of blue */}
+         <h2 className="text-[#E9DFC3] text-6xl font-extrabold tracking-tight italic drop-shadow-lg  text-center pt-10">
+    <span className="text-[#4E71FF]">Munna</span> Traders
+  </h2> 
+        <svg
+          className="absolute bottom-0 left-0 w-full"
+          viewBox="0 0 500 150"
+          preserveAspectRatio="none"
+        >
+          
+         
+  
+          
+          <path
+            d="M-0.00,49.98 C150.00,150.00 349.35,-49.98 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+            style={{ fill: "#4E71FF" }}
+          ></path>
+        </svg>
       </div>
+      
 
-      {/* Right Section with Transparent Image and Text */}
-      <div className="hidden w-1/2 lg:block relative">
-  {/* Background Image */}
-  <img
-    src={BgImage}
-    alt="Background"
-    className="w-full h-full object-cover"
-  />
+      {/* Login Card */}
+      <div className="relative z-10 bg-white shadow-2xl mt-10 rounded-2xl p-8 w-full max-w-xl ">
+        {/* Welcome message on top */}
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold text-blue-600 text-center">Welcome Back!</h1>
+          <p className="text-gray-600 text-center">Sign in to your dashboard to continue</p>
+        </div>
 
-  {/* Black overlay with transparency */}
-  <div className="absolute inset-0 bg-black" style={{ opacity: 0.5 }}></div>
+        {apiError && (
+          <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3 mb-3">
+            {apiError}
+          </div>
+        )}
 
-  {/* Text overlay */}
-  <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4">
-    <h1 className="text-4xl font-bold mb-2 drop-shadow-lg">Welcome to Munna Traders</h1>
-    <p className="text-lg drop-shadow-md">We are glad to have you here. Sign in to continue.</p>
-  </div>
-</div>
-
+        <form onSubmit={onSubmit} className="space-y-5">
+          <TextInput
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+            error={errors.email}
+            className="w-full p-3 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
+          />
+          <TextInput
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            error={errors.password}
+            className="w-full p-3 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
+          />
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white py-2 transition-all transform hover:scale-105"
+          >
+            {submitting ? "Signing in…" : "Sign in"}
+          </Button>
+        </form>
+      </div>
     </div>
-  )
+  );
 }
+

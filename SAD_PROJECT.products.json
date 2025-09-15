@@ -1,0 +1,95 @@
+[{
+  "_id": {
+    "$oid": "68c35b56decd86017b97175f"
+  },
+  "name": "Mugdal",
+  "category": {
+    "$oid": "68a8b697999e1d09b42f0b06"
+  },
+  "unitType": "ton",
+  "sku": "MU-LT-01",
+  "description": "N/A",
+  "createdAt": {
+    "$date": "2025-09-11T23:29:26.310Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:34:59.437Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c4bff9bcd88e5a4403ab58"
+  },
+  "name": "Red Potato ",
+  "category": {
+    "$oid": "68a8b670999e1d09b42f0b03"
+  },
+  "unitType": "Kg",
+  "sku": "POT-RED-01",
+  "description": "N/A",
+  "createdAt": {
+    "$date": "2025-09-13T00:51:05.874Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:35:18.308Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c4c0fbbcd88e5a4403abbd"
+  },
+  "name": "Round Potato",
+  "category": {
+    "$oid": "68a8b670999e1d09b42f0b03"
+  },
+  "unitType": "KG ",
+  "sku": "POT-ROUND-01",
+  "description": "N/A",
+  "createdAt": {
+    "$date": "2025-09-13T00:55:23.564Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:36:04.036Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5b6ab1a1395eb7a495257"
+  },
+  "name": "Basmoti Chal ",
+  "category": {
+    "$oid": "68c5b68e1a1395eb7a495250"
+  },
+  "unitType": "KG",
+  "sku": "RI-BASHMOTI-01",
+  "description": "N/A",
+  "createdAt": {
+    "$date": "2025-09-13T18:23:39.012Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:36:59.455Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c8860583ef4621b2a06e18"
+  },
+  "name": "Chini Gura Rice ",
+  "category": {
+    "$oid": "68c5b68e1a1395eb7a495250"
+  },
+  "unitType": "Kg",
+  "sku": "Grade A",
+  "description": "N/A",
+  "createdAt": {
+    "$date": "2025-09-15T21:32:53.420Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-15T21:32:53.420Z"
+  },
+  "__v": 0
+}]

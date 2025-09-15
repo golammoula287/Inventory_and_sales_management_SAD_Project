@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import Button from '../components/Button';
+import toast, { Toaster } from 'react-hot-toast';
 import api from '../services/apiClient.js';
 
 export default function VehiclePage() {
@@ -26,6 +27,7 @@ export default function VehiclePage() {
       setVehicles(res.data);
     } catch (err) {
       console.error('Error fetching vehicles:', err.response?.data || err.message);
+      toast.error('Failed to fetch vehicles');
     }
   };
 
@@ -64,8 +66,10 @@ export default function VehiclePage() {
       });
       fetchVehicles();
       resetForm();
+      toast.success('Vehicle added successfully');
     } catch (err) {
       console.error('Error creating vehicle:', err.response?.data || err.message);
+      toast.error(err.response?.data?.error || 'Failed to add vehicle');
     } finally {
       setLoading(false);
     }
@@ -87,8 +91,10 @@ export default function VehiclePage() {
       fetchVehicles();
       resetForm();
       setIsEditing(false);
+      toast.success('Vehicle updated successfully');
     } catch (err) {
       console.error('Error updating vehicle:', err.response?.data || err.message);
+      toast.error(err.response?.data?.error || 'Failed to update vehicle');
     } finally {
       setLoading(false);
     }
@@ -98,8 +104,10 @@ export default function VehiclePage() {
     try {
       await api.delete(`${VEHICLE_API}/${id}`);
       fetchVehicles();
+      toast.success('Vehicle deleted successfully');
     } catch (err) {
       console.error('Error deleting vehicle:', err.response?.data || err.message);
+      toast.error(err.response?.data?.error || 'Failed to delete vehicle');
     }
   };
 
